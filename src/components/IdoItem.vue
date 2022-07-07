@@ -12,7 +12,7 @@
             </flexbox-item>
             <flexbox-item :span="10">
               <div class="tr">
-                <span class="tag-block fs12">Whitelist: {{ whitetingState }}</span>
+                <span class="tag-block fs12">{{ stateInfo }} </span>
               </div>
             </flexbox-item>
           </flexbox>
@@ -35,8 +35,8 @@
       <div class="top-but">
         <button-tab v-model="model">
           <button-tab-item>Buy</button-tab-item>
-          <button-tab-item>Exchange</button-tab-item>
           <button-tab-item>Sell</button-tab-item>
+          <button-tab-item>Exchange</button-tab-item>
         </button-tab>
       </div>
       <!--BUY-->
@@ -73,16 +73,18 @@
       </div>
       <!--BUY END-->
       <!--EXchange -->
-      <div v-else-if="model === 1">
+      <div v-else-if="model === 2">
         <div class="item-row">
           <div class="tip fc2 fs12"><i class="iconfont icon-zhihuan fs12"></i>
-            Exchange Rate：1 NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv }}</b> {{ tokenName2 }}
+            Exchange Rate：{{ ntfValue }} NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv * ntfValue }}</b> {{
+                tokenName2
+            }}
           </div>
         </div>
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc1 fs12">NTF<br /><span class="fs10">Balance: --</span> </div>
+              <div class="tl fc1 fs12">NTF<br /><span class="fs10">Balance: {{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -135,14 +137,19 @@
       <div class="item-row">
         <flexbox>
           <flexbox-item :span="4">
-            <div class="tl"> <span v-if="model"> Receive </span>
+            <div class="tl">
+              <span v-if="model == 1"> Receive </span>
+              <span v-else-if="model == 2">Token</span>
               <span v-else> Aumont</span>
             </div>
           </flexbox-item>
           <flexbox-item :span="8">
             <div class="tr">
-              <span v-if="model"> {{ aumout * (1 - refundRate) }} {{ tokenName
+              <span v-if="model == 1"> {{ aumout * (1 - refundRate) }} {{ tokenName
               }}</span>
+              <span v-else-if="model == 2">
+                {{ bv * ntfValue }}
+              </span>
               <span v-else> {{ aumout }} {{ tokenName }}</span>
             </div>
           </flexbox-item>
@@ -150,9 +157,28 @@
       </div>
       <div class="item-row">
         <div>
-          <x-button mini style="border-radius:32px;width: 100%;">
-            Connect Wallet
-          </x-button>
+          <div v-if="model === 0">
+            <button class="button-m" :dis="buttonInfo == 'Buy Now' ? '' : '1'" @click="buyBatch()">
+              {{ buttonInfo }}
+            </button>
+          </div>
+          <div v-else-if="model === 1">
+            <button class="button-m" :dis="ntfBalance >= num ? '' : '1'" @click="buyBatch()">
+              <span v-if="ntfBalance < num">Insufficient NFT Balance</span>
+              <span v-else-if="outTime">Purchase Older Than 7 Days</span>
+              <span v-else>Sell Back</span>
+            </button>
+          </div>
+          <div v-else>
+            <button @click="tokeRate()" class="button-m" :dis="ntfBalance >= ntfValue && ntfBalance > 0 ? '' : '1'">
+              <span v-if="ntfBalance >= ntfValue && ntfBalance > 0">
+                Exchange</span>
+              <span v-else>
+                Insufficient NFT Balance
+              </span>
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -164,10 +190,13 @@
         {{ ido.description }}
       </div>
       <div class="item-row">
-        <span><i class="iconfont icon-telegram"></i></span>
-        <span class="ml"><i class="iconfont icon-shejiaotubiao-20"></i></span>
-        <span class="ml"><i class="iconfont icon-shouye"></i></span>
-        <span class="ml"><i class="iconfont icon-fenxiang"></i></span>
+        <span v-if="ido.telegram" @click="websiteHerf(ido.telegram)"><i class="iconfont icon-telegram"></i></span>
+        <span v-if="ido.twitter" @click="websiteHerf(ido.twitter)" class="ml"><i
+            class="iconfont icon-shejiaotubiao-20"></i></span>
+        <span v-if="ido.website" @click="websiteHerf(ido.website)" class="ml"><i
+            class="iconfont icon-shejiao-wangluo"></i></span>
+        <span v-if="ido.facebook" @click="websiteHerf(ido.facebook)" class="ml"><i
+            class="iconfont icon-facebook"></i></span>
       </div>
       <div style="padding: 16px 8px;">
         <div class="line2"></div>
@@ -175,19 +204,19 @@
       <div class="item-row">
         <b> Details</b>
       </div>
-      <div class="item-row info-text fc3">
+      <div class="item-row info-text fc3 itxst">
         <div> <span class="fc2">ProjtcName: </span> {{ ido.title }} </div>
         <div> <span class="fc2">Developer: </span> {{ ido.developer }}</div>
         <div> <span class="fc2">Category: </span> {{ ido.category }} </div>
         <div> <span class="fc2">Language: </span> {{ ido.language }} </div>
-        <div> <span class="fc2">Total Supply: </span> 0</div>
-        <div> <span class="fc2">NFT address: </span>{{ ido.nftAddress.substr(0, 10) }}... <i
-            class="iconfont icon-fuzhi"></i></div>
-        <div> <span class="fc2">Contract Add: </span> {{ ido.address.substr(0, 10) }}...<i
-            class="iconfont icon-fuzhi"></i>
+        <div> <span class="fc2">Total Supply: </span> {{ totalSupply }}</div>
+        <div> <span class="fc2">NFT address: </span>{{ ido.nftAddress.substr(0, 10) }}... <i class="iconfont icon-fuzhi"
+            @click="copy(ido.nftAddress)"></i></div>
+        <div> <span class="fc2">Contract Add: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
+            @click="copy(ido.address)"></i>
         </div>
         <div> <span class="fc2">Token address:</span> {{ ido.paymentAddress.substr(0, 10) }}... <i
-            class="iconfont icon-fuzhi"></i></div>
+            class="iconfont icon-fuzhi" @click="copy(ido.paymentAddress)"></i></div>
       </div>
       <div style="padding: 16px 8px;">
         <div class="line2"></div>
@@ -211,6 +240,7 @@ import { ERC721 } from '../abi/ERC721';
 import { ADDRESS } from '../abi/Provider';
 import { getBalance } from '../abi/Contract';
 import Clipboard from "clipboard";
+import Global from '../abi/Global';
 String.prototype.padZero = function (length) {
   var s = this;
   while (s.length < length) {
@@ -284,9 +314,18 @@ export default {
   },
   methods: {
     changeV(value) {
-      this.num += value;
-      this.num = (this.num > 0 ? this.num : 0);
-      this.changeNum();
+
+      if (this.model === 2) {
+        if (!this.ntfValue) this.ntfValue = 0;
+        this.ntfValue += value;
+        this.ntfValue = Math.floor(this.ntfValue > 0 ? this.ntfValue : 0);
+        this.ntfChange();
+      }
+      else {
+        this.num += value;
+        this.num = (this.num > 0 ? this.num : 0);
+        this.changeNum();
+      }
     },
     websiteHerf(url) {
       open(url);
@@ -313,10 +352,9 @@ export default {
       });
     },
     successTip(txt) {
-      this.$message({
-        message: txt,
-        type: 'success'
-      });
+      this.$vux.toast.show({
+        text: txt ? txt : 'success!'
+      })
     },
     approve() {
       let provider = new ethers.providers.Web3Provider(ethereum, 'any');
@@ -423,11 +461,7 @@ export default {
               }
               this.getStateInfo();
             })
-
-
           })
-
-
         }
       })
     },
@@ -526,9 +560,14 @@ export default {
       });
     },
     canBuy() {
+      //检查数量
+      if (this.num == '' || this.num == 0) {
+        this.toast('please input buy count!');
+        return false;
+      }
       if (this.state[0] == 1 && this.isInWhitelist) {
         if (!this.approves[1]) {
-          this.$message('you need approve!');
+          this.toast('you need approve!');
           this.approve();
           return false;
         }
@@ -536,7 +575,7 @@ export default {
       }
       else if (this.state[1] == 1 && this.tokenBalance >= this.aumout) {
         if (!this.approves[1]) {
-          this.$message('you need approve!');
+          this.toast('you need approve!');
           this.approve();
           return false;
         }
@@ -548,24 +587,24 @@ export default {
       }
     },
     canSell() {
-      if (this.ntfBalance < this.num) {
+      if (this.ntfBalance < this.num || !this.num) {
         //this.$message.error("You don't have enough NTF");
+        this.toast('You dont have enough NTF');
         return false;
       }
       else {
         if (this.approves[0]) return true;
         else {
-          this.$message('you need approve!');
+          this.toast('you need approve!');
           this.approve2(false);
           return false;
         }
       }
     },
     buyBatch() {
-      if (this.model) {
+      if (this.model === 1) {
         if (!this.canSell()) return;
         let contract = this.getProjectCurrentPriveder();
-
         contract.refund(this.num).then((res) => {
           this.loadWaitTip();
           res.wait(1).then(v => {
@@ -577,10 +616,10 @@ export default {
           this.error(err);
         })
       }
-      else {
+      else if (this.model === 0) {
+        console.log(this.num);
         if (!this.canBuy()) return;
         let contract = this.getProjectCurrentPriveder();
-
         contract.buyBatch(this.num).then((res) => {
           this.loadWaitTip();
           res.wait(1).then(v => {
@@ -651,17 +690,18 @@ export default {
     },
     changeNum() {
       this.aumout = this.num * this.price;
+      this.isBuyApprove();
     },
     error(err) {
       console.log(err);
-      this.$message.error('Service exception');
+      this.toast('Service exception');
     },
     openWebsite(address) {
-      this.$notify({
-        title: 'Success!',
-        dangerouslyUseHTMLString: true,
-        message: `<a target="_blank" href="https://testnet.bscscan.com/tx/${address}">open in website</a>`
-      });
+      this.refreash();
+      this.$vux.toast.show({
+        text: 'success!'
+      })
+      this.$vux.loading.hide();
     },
     getDateTime(secord) {
       let d = Math.floor(secord / (60 * 60 * 24));
@@ -678,29 +718,43 @@ export default {
         },
       });
       clipboard.on("success", () => {
-        this.$message("copy success!");
+        this.toast("copy success!");
         clipboard.destroy();
       });
       clipboard.on("error", () => {
-        this.$message.err("copy fail!");
+        this.toast("copy fail!");
         clipboard.destroy();
       });
     },
     loadWaitTip(txt) {
-      this.$notify({
-        title: 'Loading',
-        message: txt || 'Processing in progress, please wait!',
-        duration: 16000,
-        iconClass: 'el-icon-loading'
+      this.$vux.loading.show({
+        text: 'Loading'
       });
+    },
+    toast(txt) {
+      this.$vux.toast.text(txt, 'top');
+    },
+    refreash() {
+      this.isApprove();
+      this.getWhiteListTimestamp();
+      this.getProgress();
+      this.userIsInWhitelist();
+      this.getNftPrice();
+      this.getPayment();
+      this.exchange();
+      this.getTokenName();
+      this.getNTFBalance();
+      this.geTrefundFeeRate();
+      this.getTotalSupply();
+      this.getOutTime();
     }
   },
   mounted() {
-    this.loading = true;
+    this.$vux.loading.show({
+      text: 'Loading'
+    });
     let pid = this.$router.currentRoute.query.pid;
-
-
-    this.$http.get('/api/web/project', {
+    this.$http.get(Global.RequestApi + '/web/project', {
       params: {
         pid: pid
       }
@@ -711,24 +765,13 @@ export default {
         //this.$message("you should connect wallet!");
       }
       else {
-        this.isApprove();
-        this.getWhiteListTimestamp();
-        this.getProgress();
-        this.userIsInWhitelist();
-        this.getNftPrice();
-        this.getPayment();
-        this.exchange();
-        this.getTokenName();
-        this.getNTFBalance();
-        this.geTrefundFeeRate();
-        this.getTotalSupply();
-        this.getOutTime();
+        this.refreash();
       }
-      this.loading = false;
+      this.$vux.loading.hide();
     }).catch(err => {
       console.log(err);
       //this.$message.error("Network error!");
-      this.loading = false;
+      this.$vux.loading.hide();
     })
   },
 }
@@ -737,8 +780,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .item-box {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border: 1px solid #ececec;
+  /*filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));*/
   border-radius: 10px;
   margin: 16px;
   padding: 8px;

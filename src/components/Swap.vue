@@ -456,7 +456,7 @@ export default {
 
     },
     mounted() {
-        axios.get('/api/web/token')
+        axios.get(Global.RequestApi+'/web/token')
             .then((response) => {
                 this.list = [{ name: 'BNB', symbol: 'BNB', address: '', logo: 'https://assets.coingecko.com/coins/images/12591/thumb/binance-coin-logo.png?1600947313', decimals: 18 }];
                 this.list = this.list.concat([...response.data.data]);
@@ -471,6 +471,7 @@ export default {
     },
 }
 import axios from 'axios';
+import Global from '../abi/Global';
 </script>
 
 <style>

@@ -15,6 +15,7 @@
 </template>
 <script>
 import { Icon,Loading } from 'vux'
+import Global from '../abi/Global';
 export default {
     name: 'Announcement',
     components: {
@@ -36,7 +37,7 @@ export default {
             text: 'Loading'
         });
         let that = this;
-        this.$http.get('/api/web/announcement?pageIndex=0').then(({ data }) => {
+        this.$http.get(Global.RequestApi+ '/web/announcement?pageIndex=0').then(({ data }) => {
             this.list = data.data.list;
         }).catch(function (error) {
             console.log(error);

@@ -41,6 +41,7 @@
 
 <script>
 import { Group, Cell, Icon, ButtonTab, ButtonTabItem, XButton, Loading, Flexbox, FlexboxItem } from 'vux'
+import Global from '../abi/Global';
 
 export default {
     components: {
@@ -68,7 +69,7 @@ export default {
                 text: 'Loading'
             });
             let that = this;
-            this.$http.get('/api/web/projects', {
+            this.$http.get(Global.RequestApi+ '/web/projects', {
                 params: {
                     pageIndex: 0,
                     status: this.texts[index]
@@ -85,7 +86,7 @@ export default {
     },
     mounted() {
 
-        this.$http.get('/api/web/projects', {
+        this.$http.get(Global.RequestApi +'/web/projects', {
             params: {
                 pageIndex: 0,
                 status: 'LIVE'

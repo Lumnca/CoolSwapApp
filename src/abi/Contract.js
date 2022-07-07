@@ -12,5 +12,4 @@ function getBalance(address,provide,account){
     return contract.balanceOf(account);
 }
 
-
 export {swapContract,getBalance};
