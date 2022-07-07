@@ -1,0 +1,276 @@
+@font-face {
+    font-family: 'Orbitron';
+    src: url(../fonts/Helvetica-Neue-2.ttf);
+}
+
+@import '../fonts/iconfont.less';
+
+@bgcolor : #09010E;//屏幕背景色
+@color1 : rgba(148, 111, 206, 1);//主颜色，字体色
+@color2 : rgba(156, 154, 165, 1);//信息颜色，禁用时候文本颜色
+
+@bodercolor : #ececec; //边框线色
+@inputcolor : #2c2c2c; //输入框背景色
+@disablecolor : #1E1542;//禁用块颜色
+@tipbgcolor : #262B29;//弹框背景色
+
+body {
+    overflow-x: hidden;
+    background-color: @bgcolor;
+    font-family: 'Orbitron';
+    color: @color1;
+    background-image: url(../cool-background.png);
+}
+
+
+.font-or {
+    font-family: 'Orbitron';
+}
+
+.fs32 {
+    font-size: 32px;
+    line-height: 32px;
+}
+
+.fs24 {
+    font-size: 24px;
+}
+
+.fs22 {
+    font-size: 22px;
+}
+
+.fs20 {
+    font-size: 20px;
+}
+
+.fs10 {
+    font-size: 10px;
+}
+
+.fs18 {
+    font-size: 18px;
+}
+
+.fs16 {
+    font-size: 16px;
+}
+
+.fs14 {
+    font-size: 14px;
+}
+
+.fs12 {
+    font-size: 12px;
+}
+
+.fb {
+    font-weight: 600;
+}
+
+.pd8 {
+    padding: 8px;
+}
+
+.tl {
+    text-align: left;
+}
+
+.tc {
+    text-align: center;
+}
+
+.tr {
+    text-align: right;
+}
+
+.line {
+    width: 100%;
+    height: 2px;
+    background-color: @color2;
+}
+
+.line2 {
+    width: 100%;
+    height: 1px;
+    background-color: @color2;
+}
+
+.icon-block {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    background-color: @tipbgcolor;
+    border: 0px solid;
+    border-radius: 8px;
+    text-align: center;
+
+}
+
+.icon-block .icon {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.c-info {
+    color: @color2;
+}
+
+
+
+.fr {
+    float: right;
+}
+
+.tag-block {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 8px 8px;
+}
+
+.img-m {
+    min-width: 300px;
+    min-height: 200px;
+    width: 100%;
+    margin: auto;
+}
+
+.top-but {
+    padding: 8px 16px;
+}
+
+.top-but a {
+    text-decoration: none;
+}
+
+.tip {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 3px;
+    padding: 8px;
+}
+
+.fc1 {
+    color: @color1;
+}
+
+.fc2 {
+    color: @color2;
+}
+.fc3{
+    color: #fff;
+}
+
+.input-x {
+    padding: 4px;
+    line-height: 14px;
+    font-size: 14px;
+    // font-family: 'Orbitron';
+    border: 1px solid @bodercolor;
+    height: 14px;
+    border-radius: 4px;
+    color: @color1;
+    background-color: @inputcolor;
+}
+
+.input-s {
+    padding: 4px;
+    line-height: 16px;
+    font-size: 16px;
+    font-family: 'Orbitron';
+    border: 1px solid #ececec;
+    height: 20px;
+    border-radius: 8px;
+    color: @color1;
+    background-color: @inputcolor;
+}
+
+.input-s[dis="1"]{
+    background-color: @color2;
+    color: #746e6e;
+}
+
+.icon-but {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.icon-m{
+    width: 14px;
+    height: 14px;
+}
+
+
+.weui-dialog {
+    background-color: @tipbgcolor !important;
+    color: @color1 !important;
+    border-radius: 8px !important;
+}
+
+.button-s{
+    border: 1px solid @bodercolor;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: @color1;
+    background-color: inherit;
+}
+
+.button-m{
+    border: 1px solid @bodercolor;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 8px 16px;
+    color: inherit;
+    width: 100%;
+    background-color: @bgcolor;
+}
+
+.button-m[dis='1']{
+    padding: 8px 16px;
+    cursor: not-allowed;
+    background: @disablecolor;
+    color:  @color2;
+}
+
+.wap{
+    white-space: pre-wrap;
+}
+
+.tag-m{
+    font-size: 10px;
+    color: @color2;
+    border: 1px solid @bodercolor;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: 'Orbitron';
+}
+
+.dialog-title{
+    padding: 8px 16px;
+    font-size: 18px;
+    color: @color1;
+    text-align: left;
+}
+
+.dialog-body{
+    padding: 8px 16px;
+    color: #fff;
+    text-align: left;
+    font-size: 14px;
+}
+
+.dialog-footer{
+    float: right;
+    padding: 8px 16px;
+    color: #fff;
+}
+
+.close{
+    float: right;
+    color: #fff;
+}
+
+.fr{
+    float: right;
+}
