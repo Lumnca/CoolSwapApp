@@ -31,7 +31,7 @@
                         </div>
                         
                         <div class="dialog-footer">
-                            <button class="button-s">logout <i class="iconfont icon-tuichu"></i> </button>
+                            <button class="button-s" @click="logout()">logout <i class="iconfont icon-tuichu"></i> </button>
                         </div>
 
 
@@ -76,7 +76,7 @@ export default {
             this.tipVisible = true;
         },
         openMenu() {
-            this.$router.push('/');
+            this.$router.push('/home');
         },
         toConnectWallet() {
             if (this.hasAccount() && !this.logoutFlag) {
@@ -164,7 +164,7 @@ export default {
             });
         },
         logout() {
-            this.tipVisible = false;
+            this.showToast = false;
             this.logoutFlag = true;
             this.tipMessage("lose connect!", true);
             this.clearAccount();
@@ -222,7 +222,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .top {
-    padding: 32px;
+    padding: 16px;
     font-family: 'Orbitron';
     font-size: 24px;
 }

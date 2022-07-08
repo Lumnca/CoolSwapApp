@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="line"></div>
-        <div v-for="item in menuList" :key="item.name" @click="toView(item.name)">
+        <div v-for="item in menuList" :key="item.name" @click="toView(item.path)">
             <div class="menu-item">
                 <div>
                     <div class="icon-block tr">
@@ -31,17 +31,20 @@ export default {
                 {
                     name: "Swap",
                     description: "Trade tokens in an instant",
-                    icon: 'icon iconfont icon-zhihuan'
+                    icon: 'icon iconfont icon-zhihuan',
+                    path : 'Swap'
                 },
                 {
-                    name: "IDO",
+                    name: "Lunchpad",
                     description: "Buy new unique NFTs",
-                    icon: 'icon iconfont icon-huojian'
+                    icon: 'icon iconfont icon-huojian',
+                    path : 'Ido'
                 },
                 {
-                    name: "Announcement",
+                    name: "Notice",
                     description: "Coolswap activities",
-                    icon: 'icon iconfont icon-shengyin'
+                    icon: 'icon iconfont icon-shengyin',
+                    path : 'Announcement'
                 }
             ]
         }

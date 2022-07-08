@@ -9,26 +9,28 @@
         </div>
         <div class="ido-box">
             <div v-if="list.length === 0">
-                暂无数据
+                Coming soon
             </div>
             <flexbox>
                 <flexbox-item>
                     <div v-for="item, i in list" :key="item.pid" :class="(i === 0 ? 'first' : 'ido-item')">
                         <div class="pd8">
-                            <img :src="item.imgData"   height="240" width="260" style="object-fit: fill;" />
+                            <img :src="item.imgData" height="243" width="100%" style="object-fit: fill;" />
                         </div>
-                        <div class="fs20 item-text">
+                        <div class="fs20 item-text fc4">
                             {{ item.title }}
                         </div>
-                         <div class="item-text fd">
-                          <span class="tag-m"> End in {{ item.endTime }}</span>
+                        <div class="item-text fd">
+                            <span v-if="status == 2" class="tag-l"> End of sale</span>
+                            <span v-else-if="status == 1" class="tag-l"> Start in {{ timeShow(item.startTime)}}</span>
+                            <span v-else class="tag-l"> End in {{ timeShow(item.endTime) }}</span>
                         </div>
                         <div class="fc3 item-text fs14 ">
                             {{ item.description }}
                         </div>
-                       
+
                         <div class="tc item-text bd">
-                            <button @click="toItem(item.pid)" class="button-m">
+                            <button @click="toItem(item.pid)" class="button-l">
                                 Check
                             </button>
                         </div>
@@ -42,7 +44,13 @@
 <script>
 import { Group, Cell, Icon, ButtonTab, ButtonTabItem, XButton, Loading, Flexbox, FlexboxItem } from 'vux'
 import Global from '../abi/Global';
-
+String.prototype.padZero = function (length) {
+    var s = this;
+    while (s.length < length) {
+        s = '0' + s;
+    }
+    return s;
+};
 export default {
     components: {
         Group,
@@ -58,10 +66,20 @@ export default {
         }
     },
     methods: {
+        timeShow(time) {
+            let date = new Date(time);
+            let now = new Date();
+            let secord = Math.abs(Math.floor((date.getTime()-now.getTime())/1000));
+            let d = Math.floor(secord / (60 * 60 * 24));
+            let h = Math.floor(secord / (60 * 60)) % 24;
+            let m = Math.floor(secord / 60) % 60;
+            let s = secord % 60;
+            return `${d}d ${h.toString().padZero(2)}:${m.toString().padZero(2)}:${s.toString().padZero(2)}`;
+        },
         toItem(id) {
             this.$router.push({
                 path: 'IdoItem',
-                query: { pid : id }
+                query: { pid: id }
             });
         },
         changeType(index) {
@@ -69,7 +87,7 @@ export default {
                 text: 'Loading'
             });
             let that = this;
-            this.$http.get(Global.RequestApi+ '/web/projects', {
+            this.$http.get(Global.RequestApi + '/web/projects', {
                 params: {
                     pageIndex: 0,
                     status: this.texts[index]
@@ -86,7 +104,7 @@ export default {
     },
     mounted() {
 
-        this.$http.get(Global.RequestApi +'/web/projects', {
+        this.$http.get(Global.RequestApi + '/web/projects', {
             params: {
                 pageIndex: 0,
                 status: 'LIVE'
@@ -100,13 +118,6 @@ export default {
 </script>
 
 <style >
-
-.first {
-    border: 1px solid #ececec;
-    border-radius: 10px;
-    padding: 8px;
-}
-
 .top-but {
     padding: 8px 32px;
 }
@@ -124,6 +135,13 @@ export default {
 .ido-box {
     padding: 8px 32px;
 }
+
+.first {
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 8px;
+}
+
 
 .ido-item {
     border: 1px solid #ececec;

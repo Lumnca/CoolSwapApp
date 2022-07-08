@@ -3,7 +3,7 @@
     <div class="item-box">
       <div>
         <div class="item-row">
-          <img :src="ido.imgData" height="274" class="img-m" />
+          <img :src="ido.imgData" height="274" width="100%" class="img-m" />
         </div>
         <div class="item-row">
           <flexbox>
@@ -19,10 +19,10 @@
         </div>
         <div class="item-row">
           <flexbox>
-            <flexbox-item :span="2">
-              <div class="tl">Inprogress </div>
+            <flexbox-item :span="3">
+              <div class="tl">Inprogress</div>
             </flexbox-item>
-            <flexbox-item :span="10">
+            <flexbox-item :span="9">
               <div class="tr">
                 <span class="tag-block fs12"> {{ progress }}% ({{ buyNumber }}/{{ totalNumber }})</span>
               </div>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="item-box">
-      <div class="top-but">
+      <div class="top-but" style="padding: 8px;">
         <button-tab v-model="model">
           <button-tab-item>Buy</button-tab-item>
           <button-tab-item>Sell</button-tab-item>
@@ -42,15 +42,15 @@
       <!--BUY-->
       <div v-if="model === 0">
         <div class="item-row">
-          <div class="tip fs12 fc2"><i class="iconfont icon-dengpao1"></i> {{ stateInfo }} </div>
+          <div class="tip fs12 fc3"><i class="iconfont icon-dengpao1"></i> {{ stateInfo }} </div>
         </div>
         <div class="item-row">
           <flexbox>
             <flexbox-item>
-              <div class="tl fc1 fs14">Current Price</div>
+              <div class="tl fc2 fs14">Current Price</div>
             </flexbox-item>
             <flexbox-item>
-              <div class="tr fs14">
+              <div class="tr fs14 fc3">
                 {{ price }} {{ tokenName }} per NFT
               </div>
             </flexbox-item>
@@ -59,12 +59,12 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc1 fs12">Quantity<br /><span class="fs10">{{ tokenBalance }}</span> </div>
+              <div class="tl fc2 fs14">Quantity<br /><span class="fs10"> Balance: {{ tokenBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
                 <i class="iconfont icon-jianhao icon-but" @click="changeV(-1)"></i>
-                <input type="number" class="input-x" style="width: 80px;" v-model="num" />
+                <input type="number" placeholder="0" class="input-x" style="width: 80px;" v-model="num" />
                 <i class="iconfont icon-zengjia icon-but" @click="changeV(1)"></i>
               </div>
             </flexbox-item>
@@ -75,8 +75,8 @@
       <!--EXchange -->
       <div v-else-if="model === 2">
         <div class="item-row">
-          <div class="tip fc2 fs12"><i class="iconfont icon-zhihuan fs12"></i>
-            Exchange Rate：{{ ntfValue }} NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv * ntfValue }}</b> {{
+          <div class="tip fc3 fs12"><i class="iconfont icon-zhihuan fs12"></i>
+            Exchange Rate： 1 NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv }}</b> {{
                 tokenName2
             }}
           </div>
@@ -84,7 +84,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc1 fs12">NTF<br /><span class="fs10">Balance: {{ ntfBalance }}</span> </div>
+              <div class="tl fc fs12">NTF<br /><span class="fs10">Balance: {{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -100,16 +100,16 @@
       <!--sell-->
       <div v-else>
         <div class="item-row">
-          <div class="tip fs10 fc2"><i class="iconfont icon-dengpao2"></i> Unexchanged NFTs can be sold back within 7
+          <div class="tip fs10 fc3"><i class="iconfont icon-dengpao2"></i> Unexchanged NFTs can be sold back within 7
             days </div>
         </div>
         <div class="item-row">
           <flexbox>
             <flexbox-item>
-              <div class="tl fc1 fs14">Current Price</div>
+              <div class="tl fc2 fs14">Current Price</div>
             </flexbox-item>
             <flexbox-item>
-              <div class="tr fs14">
+              <div class="tr fs14 fc3">
                 {{ price }} {{ tokenName }} per NFT
               </div>
             </flexbox-item>
@@ -118,7 +118,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc1 fs12">Quantity<br /><span class="fs10">Balance:{{ ntfBalance }}</span> </div>
+              <div class="tl fc2 fs14">Quantity<br /><span class="fs10">Balance:{{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -134,7 +134,7 @@
       <div style="padding: 16px 8px;">
         <div class="line2"></div>
       </div>
-      <div class="item-row">
+      <div class="item-row fc3">
         <flexbox>
           <flexbox-item :span="4">
             <div class="tl">
@@ -145,7 +145,7 @@
           </flexbox-item>
           <flexbox-item :span="8">
             <div class="tr">
-              <span v-if="model == 1"> {{ aumout * (1 - refundRate) }} {{ tokenName
+              <span v-if="model == 1"> {{ (aumout * (1 - refundRate)).toPrecision(5) }} {{ tokenName
               }}</span>
               <span v-else-if="model == 2">
                 {{ bv * ntfValue }}
@@ -155,22 +155,22 @@
           </flexbox-item>
         </flexbox>
       </div>
-      <div class="item-row">
+      <div class="item-row fc3">
         <div>
           <div v-if="model === 0">
-            <button class="button-m" :dis="buttonInfo == 'Buy Now' ? '' : '1'" @click="buyBatch()">
+            <button class="button-l" :dis="buttonInfo == 'Buy Now' ? '' : '1'" @click="buyBatch()">
               {{ buttonInfo }}
             </button>
           </div>
           <div v-else-if="model === 1">
-            <button class="button-m" :dis="ntfBalance >= num ? '' : '1'" @click="buyBatch()">
+            <button class="button-l" :dis="ntfBalance >= num ? '' : '1'" @click="buyBatch()">
               <span v-if="ntfBalance < num">Insufficient NFT Balance</span>
               <span v-else-if="outTime">Purchase Older Than 7 Days</span>
               <span v-else>Sell Back</span>
             </button>
           </div>
           <div v-else>
-            <button @click="tokeRate()" class="button-m" :dis="ntfBalance >= ntfValue && ntfBalance > 0 ? '' : '1'">
+            <button @click="tokeRate()" class="button-l" :dis="ntfBalance >= ntfValue && ntfBalance > 0 ? '' : '1'">
               <span v-if="ntfBalance >= ntfValue && ntfBalance > 0">
                 Exchange</span>
               <span v-else>
@@ -256,7 +256,7 @@ export default {
   data() {
     return {
       name: 'x',
-      num: 0,
+      num: '',
       model: 0,
       ido: {
         address: "0x2946CF1e470c58042D0001510f07Df1b4430D32b",
@@ -314,7 +314,7 @@ export default {
   },
   methods: {
     changeV(value) {
-
+      this.num = Number(this.num);
       if (this.model === 2) {
         if (!this.ntfValue) this.ntfValue = 0;
         this.ntfValue += value;
@@ -690,6 +690,12 @@ export default {
     },
     changeNum() {
       this.aumout = this.num * this.price;
+      if(this.tokenBalance<this.aumout){
+        this.buttonInfo = "Insufficient Token Balance";
+      }
+      else{
+        this.getStateInfo();
+      }
       this.isBuyApprove();
     },
     error(err) {
@@ -796,6 +802,6 @@ export default {
 }
 
 .item-row {
-  padding: 8px 16px;
+  padding: 12px 16px;
 }
 </style>

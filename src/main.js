@@ -25,6 +25,10 @@ Vue.use(VueRouter)
 
 const routes = [{
   path: '/',
+  component: Swap
+},
+{
+  path : '/home',
   component: MenuList
 },
 {

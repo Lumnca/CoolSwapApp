@@ -6,10 +6,10 @@
 @import '../fonts/iconfont.less';
 
 @bgcolor : #09010E;//屏幕背景色
-@color1 : rgba(148, 111, 206, 1);//主颜色，字体色
+@color1 : rgba(148, 111, 206, 1);//主颜色，字体色color: rgba(148, 111, 206);
 @color2 : rgba(156, 154, 165, 1);//信息颜色，禁用时候文本颜色
 
-@bodercolor : #ececec; //边框线色
+@bodercolor : #fff; //边框线色
 @inputcolor : #2c2c2c; //输入框背景色
 @disablecolor : #1E1542;//禁用块颜色
 @tipbgcolor : #262B29;//弹框背景色
@@ -70,6 +70,34 @@ body {
 
 .pd8 {
     padding: 8px;
+}
+
+.mt4{
+    margin-top: 4px;
+}
+
+.mt8{
+    margin-top: 8px;
+}
+
+.mt12{
+    margin-top: 12px;
+}
+
+.mt16{
+    margin-top: 16px;
+}
+
+.ml8{
+    margin-left: 8px;
+}
+
+.ml16{
+    margin-left: 16px;
+}
+
+.ml24{
+    margin-left: 24px;
 }
 
 .tl {
@@ -136,7 +164,7 @@ body {
 }
 
 .top-but {
-    padding: 8px 16px;
+    padding: 8px;
 }
 
 .top-but a {
@@ -160,25 +188,39 @@ body {
     color: #fff;
 }
 
+.fc4{
+    color: #5bc9be;
+}
+
 .input-x {
-    padding: 4px;
-    line-height: 14px;
-    font-size: 14px;
+    padding: 2px;
+    font-size: 24px;
     // font-family: 'Orbitron';
     border: 1px solid @bodercolor;
-    height: 14px;
+    height: 26px;
     border-radius: 4px;
+    color: @color1;
+    background-color: @inputcolor;
+}
+.input-b{
+    padding: 8px;
+    line-height: 20px;
+    font-size: 20px;
+    font-family: 'Orbitron';
+    border: 1px solid @bodercolor;;
+    height: 24px;
+    border-radius: 16px;
     color: @color1;
     background-color: @inputcolor;
 }
 
 .input-s {
     padding: 4px;
-    line-height: 16px;
-    font-size: 16px;
+    line-height: 20px;
+    font-size: 20px;
     font-family: 'Orbitron';
-    border: 1px solid #ececec;
-    height: 20px;
+    border: 1px solid @bodercolor;;
+    height: 24px;
     border-radius: 8px;
     color: @color1;
     background-color: @inputcolor;
@@ -193,6 +235,9 @@ body {
     border: 1px solid @bodercolor;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 24px;
+    line-height: 28px;
+    height: 28px;
 }
 
 .icon-m{
@@ -205,6 +250,7 @@ body {
     background-color: @tipbgcolor !important;
     color: @color1 !important;
     border-radius: 8px !important;
+    max-width : 330px;
 }
 
 .button-s{
@@ -214,6 +260,12 @@ body {
     padding: 4px 8px;
     color: @color1;
     background-color: inherit;
+}
+
+.button-s[dis='1']{
+    cursor: not-allowed;
+    background: #68c9c5;
+    color:  #302f31;
 }
 
 .button-m{
@@ -233,6 +285,22 @@ body {
     color:  @color2;
 }
 
+.button-l{
+    border: 0px solid @bodercolor;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 8px 16px;
+    color: #fff;
+    width: 100%;
+    background-color: @color1;
+}
+
+.button-l[dis='1']{
+    cursor: not-allowed;
+    background: @disablecolor;
+    color:  @color2;
+}
+
 .wap{
     white-space: pre-wrap;
 }
@@ -246,11 +314,22 @@ body {
     font-family: 'Orbitron';
 }
 
+.tag-l{
+    font-size: 14px;
+    color: #fff;
+    border: 0px solid @bodercolor;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: 'Orbitron';
+    background-color: @color1;
+}
+
 .dialog-title{
-    padding: 8px 16px;
+    padding: 16px 16px;
     font-size: 18px;
     color: @color1;
     text-align: left;
+    border-bottom: 1px solid #413f3f;
 }
 
 .dialog-body{
@@ -258,12 +337,14 @@ body {
     color: #fff;
     text-align: left;
     font-size: 14px;
+
 }
 
 .dialog-footer{
     float: right;
     padding: 8px 16px;
     color: #fff;
+
 }
 
 .close{

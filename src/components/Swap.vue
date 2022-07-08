@@ -10,15 +10,16 @@
                 <flexbox-item>
                     <div class="flex-demo tr">
                         <i @click="clear()" class="iconfont icon-shuaxin1 fs20"></i>
+                        <i @click="setVisible = true" class="iconfont icon-shezhi fs20"></i>
                     </div>
                 </flexbox-item>
             </flexbox>
             <br />
             <div>
-                <div class="font-or fc1">
+                <div class="font-or fc1" @click="openList(0)">
                     <img :src="to.logo" height="14" />
                     {{ to.symbol }}
-                    <span @click="openList(0)">
+                    <span>
                         <i class="iconfont icon-xiala icon-m"></i>
                     </span>
                     <span class="fr fc2">Balance: {{ balance }}</span>
@@ -27,13 +28,13 @@
                     <input v-model="toValue" :dis="isComputed2 ? '1' : ''" @input="changeV1()" placeholder="0"
                         type="number" class="input-s" style="width: 100%;" />
                 </div>
-                <div class="tc pd8">
+                <div class="tc pd8" style="margin-top: 18px;">
                     <i @click="exchangeToken()" class="iconfont icon-igw-l-switch-1 fs20"></i>
                 </div>
-                <div class="font-or">
+                <div class="font-or" @click="openList(1)">
                     <img :src="from.logo" height="14" />
                     {{ from.symbol }}
-                    <span @click="openList(1)">
+                    <span>
                         <i class="iconfont icon-xiala  icon-m"></i>
                     </span>
                     <span class="fr fc2">Balance: {{ balance2 }}</span>
@@ -45,14 +46,29 @@
                 <br />
                 <div>
                     <flexbox>
+                        <flexbox-item :span="1">
+                            <div class="font-or fs14">
+                                Price
+                            </div>
+                        </flexbox-item>
                         <flexbox-item>
-                            <div class="font-or fs10">
+                            <div class="tr font-or fs14">
+                                {{ perText }}
+                            </div>
+                        </flexbox-item>
+                    </flexbox>
+                </div>
+
+                <div style="margin-top: 8px;">
+                    <flexbox>
+                        <flexbox-item>
+                            <div class="font-or fs14">
                                 Slippage Tolerance
                             </div>
                         </flexbox-item>
                         <flexbox-item>
-                            <div class="tr font-or">
-                                {{slippage*100}} % <i @click="setSlippage()" class="iconfont icon-shezhi fs20"></i>
+                            <div class="tr font-or fs14">
+                                {{ slippage * 100 }} %
                             </div>
                         </flexbox-item>
                     </flexbox>
@@ -71,27 +87,51 @@
         </div>
         <div>
             <div>
-                <x-dialog v-model="dialogVisible" class="dialog-demo">
+                <x-dialog v-model="dialogVisible" class="dialog-width">
                     <div class="dialog-title">Token List <span class="close" @click="dialogVisible = false">
                             <i class="iconfont icon-guanbi"></i>
                         </span></div>
-
-                    <div class="dialog-body" style="height: 300px;overflow-y: auto;">
+                    <div class="dialog-body">
                         <div>
-                            Select a token
-                        </div>
-                        <div>
-                            <input style="width: 95%;" @input="search()" v-model="searchValue" class="input-s"
+                            <input style="width: 95%;" @input="search()" v-model="searchValue" class="input-b"
                                 placeholder="Search name or paste address" />
                         </div>
-                        <div class="list-option tl font-or" v-for="item in filterList" :key="item.symbol"
-                            @click="selectType(item)">
-                            <img :src="item.logo" height="14" /> {{ item.symbol }}
+                        <div style="max-height: 240px;overflow-y: auto;margin-top: 12px;">
+                            <div class="list-option tl font-or" v-for="item in filterList" :key="item.symbol"
+                                @click="selectType(item)">
+                                <flexbox>
+                                    <flexbox-item :span="1">
+                                        <img :src="item.logo" height="24" />
+                                    </flexbox-item>
+                                    <flexbox-item>
+                                        <div class="fs16 tl">{{ item.symbol }}</div>
+                                        <div class="fs12 tl fc2">{{ item.name }}</div>
+                                    </flexbox-item>
+                                </flexbox>
+                            </div>
                         </div>
                     </div>
                 </x-dialog>
             </div>
-
+            <div>
+                <x-dialog v-model="setVisible" class="dialog-width">
+                    <div class="dialog-title">Swap Set <span class="close" @click="setVisible = false">
+                            <i class="iconfont icon-guanbi"></i>
+                        </span></div>
+                    <div class="dialog-body">
+                        <div class="dialog-item">
+                            Slippage Tolerance
+                        </div> 
+                        <div class="dialog-item ">
+                            <button @click="setSlippage(1)" class="button-s " :dis="slippageType==1?'1':''">0.25%</button>
+                            <button @click="setSlippage(2)" class="button-s ml8" :dis="slippageType==2?'1':''">0.50%</button>
+                            <button @click="setSlippage(3)" class="button-s ml8" :dis="slippageType==3?'1':''">0.75%</button>
+                            <button @click="setSlippage(4)" class="button-s ml8" :dis="slippageType==4?'1':''">1.00%</button>
+                        </div>
+                    </div>
+    
+                </x-dialog>
+            </div>
         </div>
     </div>
 </template>
@@ -131,12 +171,14 @@ export default {
             setVisible: false,
             slippage: 0.005,
             limit: 99999999,
+            perText: '',
+            slippageType : 1,
         }
     },
     methods: {
-        setSlippage(){
-            this.slippage = ((this.slippage +0.0025)%0.0125)
-            if(this.slippage === 0)this.slippage = 0.0025;
+        setSlippage(i) {
+            this.slippageType = i;
+            this.slippage = i *0.0025;
         },
         toast(txt) {
             this.$vux.toast.text(txt, 'top');
@@ -432,13 +474,13 @@ export default {
             return;
         },
         clear() {
-             this.toValue = '';
+            this.toValue = '';
             this.fromValue = '';
             this.getBalance(true);
             this.getBalance(false);
             this.changeV1();
             this.changeV2();
-           
+
         },
         exchangeToken() {
             let temp = JSON.stringify(this.to);
@@ -456,7 +498,7 @@ export default {
 
     },
     mounted() {
-        axios.get(Global.RequestApi+'/web/token')
+        axios.get(Global.RequestApi + '/web/token')
             .then((response) => {
                 this.list = [{ name: 'BNB', symbol: 'BNB', address: '', logo: 'https://assets.coingecko.com/coins/images/12591/thumb/binance-coin-logo.png?1600947313', decimals: 18 }];
                 this.list = this.list.concat([...response.data.data]);
@@ -466,7 +508,7 @@ export default {
                 this.getBalance(false);
                 this.per()
                 this.isApprove();
-                  localStorage.setItem('_tokens', JSON.stringify(response.data.data));
+                localStorage.setItem('_tokens', JSON.stringify(response.data.data));
             })
     },
 }
@@ -476,25 +518,31 @@ import Global from '../abi/Global';
 
 <style>
 .swap {
-    padding: 32px;
-
+    padding: 16px;
 }
 
 .list-option {
     padding: 8px 16px;
     border: 1px solid #505050;
-    border-radius: 3px;
+    border-radius: 4px;
     margin-top: 16px;
+    font-size: 20px;
+    min-width: 280px;
 }
 
 
 .swap-box {
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid #fff;
     border-radius: 8px;
-    padding: 28px;
+    padding: 20px;
 }
 
 .but {
-    margin-top: 12px;
+    margin-top: 16px;
 }
+.dialog-item{
+    padding: 8px;
+    min-width: 292px;
+}
+
 </style>
