@@ -3,7 +3,7 @@
     <div class="item-box">
       <div>
         <div class="item-row">
-          <img :src="ido.imgData" height="274" width="100%" class="img-m" />
+          <img :src="ido.imgData" height="243" width="100%" class="img-m" />
         </div>
         <div class="item-row">
           <flexbox>
