@@ -11,13 +11,14 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'https://coolswap.finance/',
+      /*'/api': {
+        //target: 'https://coolswap.finance/',//线上
+        target : 'https://dev.coolswap.finance/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         }
-      }
+      }*/
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

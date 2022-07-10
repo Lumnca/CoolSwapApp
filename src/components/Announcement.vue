@@ -2,13 +2,13 @@
     <div>
         <div class="item-box" v-for="item in list" :key="item.id" @click="toItem(item)">
             <div class="item-row fc1 ">
-                <p class="item-title">{{ item.title }}</p>
+                <p class="item-title">{{  $i18n.locale=='en'?item.title:item.titleCN }}</p>
             </div>
             <div class="item-row">
                 <span class="tag-m tag-block">{{ item.createTime }}</span>
             </div>
             <div class="item-row fs14 fc3 wap">
-               <p class="item-des">{{ item.content }}</p> 
+               <p class="item-des">{{ $i18n.locale=='en'?item.content :item.contentCN}}</p> 
             </div>
         </div>
     </div>
@@ -39,6 +39,7 @@ export default {
         let that = this;
         this.$http.get(Global.RequestApi + '/web/announcement?pageIndex=0').then(({ data }) => {
             this.list = data.data.list;
+            console.log(this.list)
         }).catch(function (error) {
             console.log(error);
         }).then(function () {

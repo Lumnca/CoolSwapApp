@@ -29,20 +29,20 @@ export default {
         return {
             menuList: [
                 {
-                    name: "Swap",
-                    description: "Trade tokens in an instant",
+                    name: this.$t('swap'),
+                    description: this.$t('ttii'),
                     icon: 'icon iconfont icon-zhihuan',
                     path : 'Swap'
                 },
                 {
                     name: "Lunchpad",
-                    description: "Buy new unique NFTs",
+                    description: this.$t('bnun'),
                     icon: 'icon iconfont icon-huojian',
                     path : 'Ido'
                 },
                 {
-                    name: "Notice",
-                    description: "Coolswap activities",
+                    name: this.$t('notice'),
+                    description: this.$t('cac'),
                     icon: 'icon iconfont icon-shengyin',
                     path : 'Announcement'
                 }
