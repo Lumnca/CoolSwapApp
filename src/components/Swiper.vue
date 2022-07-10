@@ -1,7 +1,7 @@
 <template>
     <div>
         <group-title></group-title>
-        <group-title>默认高度为180px</group-title>
+        <group-title></group-title>
         <swiper :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange"></swiper>
     </div>
 </template>

@@ -75,7 +75,7 @@
                 </div>
                 <div class="but">
                     <button class="button-m" @click="swap()">
-                        <span v-if="needApprove" class="font-or fs16">Approve{{$t('Approve')}}</span>
+                        <span v-if="needApprove" class="font-or fs16">{{$t('Approve')}}</span>
                         <span v-else-if="isNullValue()" class="font-or fs16">{{$t('EnterAmount')}}</span>
                         <span v-else-if="!isCanExchange()" class="font-or fs16">
                           {{$t('Insufficient',{type:this.to.symbol})}}

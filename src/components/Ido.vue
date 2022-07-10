@@ -66,6 +66,10 @@ export default {
         }
     },
     methods: {
+        bw(v){
+            if(v>10)return v;
+            else return '0'+v;
+        },
         timeShow(time) {
             let date = new Date(time);
             let now = new Date();
@@ -74,7 +78,7 @@ export default {
             let h = Math.floor(secord / (60 * 60)) % 24;
             let m = Math.floor(secord / 60) % 60;
             let s = secord % 60;
-            return `${d}d ${h.toString().padZero(2)}:${m.toString().padZero(2)}:${s.toString().padZero(2)}`;
+            return `${this.bw(d)}d ${this.bw(h)}:${this.bw(m)}:${this.bw(s)}`;
         },
         toItem(id) {
             this.$router.push({
