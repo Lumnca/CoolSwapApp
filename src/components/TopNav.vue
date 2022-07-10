@@ -6,7 +6,11 @@
                     <img src="../assets/cool.png">
                     <span class="pd8" @click="openMenu()">
                         <i class="fs32 iconfont icon-caidan1"></i>
+                        <span class="fs18" @click="openMenu()">
+                            EN
+                        </span>
                     </span>
+
                 </div>
             </flexbox-item>
             <flexbox-item>
@@ -29,9 +33,10 @@
                         <div class="dialog-body  itxst">
                             Your Address : {{ account }} &nbsp;<i @click="copy()" class="iconfont icon-fuzhi"></i>
                         </div>
-                        
+
                         <div class="dialog-footer">
-                            <button class="button-s" @click="logout()">logout <i class="iconfont icon-tuichu"></i> </button>
+                            <button class="button-s" @click="logout()">logout <i class="iconfont icon-tuichu"></i>
+                            </button>
                         </div>
 
 
@@ -47,6 +52,7 @@
 <script>
 import { Icon, Flexbox, FlexboxItem, XButton, Toast, XDialog } from 'vux'
 import Clipboard from "clipboard";
+import { Router, WBNB, strId, ChainId, ChainName, rpcUrl } from '../abi/Provider';
 export default {
     name: 'TopNav',
     components: {
@@ -116,9 +122,9 @@ export default {
                     method: 'wallet_addEthereumChain',
                     params: [
                         {
-                            chainId: '0x61',
-                            chainName: 'chain97',
-                            rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+                            chainId: strId,
+                            chainName: ChainName,
+                            rpcUrls: [rpcUrl],
                         },
                     ],
                 });
@@ -133,7 +139,7 @@ export default {
                 try {
                     ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x61' }], // chainId must be in hexadecimal numbers
+                        params: [{ chainId: strId }], // chainId must be in hexadecimal numbers
                     });
                 } catch (error) {
                     if (error.code === 4902) {
@@ -172,6 +178,7 @@ export default {
     },
     mounted() {
         //插件检测
+        ethereum.removeAllListeners();
         if (typeof ethereum !== 'undefined') {
             console.log('MetaMask is installed!');
             ethereum.on('accountsChanged', (res) => {
@@ -179,7 +186,7 @@ export default {
                     if (res[0]) {
                         this.tipMessage("connect wallet success!");
                         this.setAccount(res[0]);
-                        if (ethereum.chainId !== 97) {
+                        if (ethereum.chainId !== ChainId) {
                             this.changeNetwork();
                         }
                     }
@@ -204,7 +211,7 @@ export default {
             this.tipMessage('MetaMask is not installed!', true);
         }
         //网络检测
-        if (Number(ethereum.chainId) !== 97) {
+        if (Number(ethereum.chainId) !== ChainId) {
             this.addNetwork();
         }
         //账户信息获取
@@ -215,6 +222,9 @@ export default {
                 this.setAccount(account);
             }
         }, 3000);
+    },
+    destroyed() {
+
     },
 }
 </script>

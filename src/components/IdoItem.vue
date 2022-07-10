@@ -8,23 +8,23 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="2">
-              <div class="tl">Stage</div>
+              <div class="tl fs20">Stage</div>
             </flexbox-item>
             <flexbox-item :span="10">
-              <div class="tr">
-                <span class="tag-block fs12">{{ stateInfo }} </span>
+              <div class="tr fc3">
+                <span class="tag-block fs16">{{ stateInfo }} </span>
               </div>
             </flexbox-item>
           </flexbox>
         </div>
         <div class="item-row">
           <flexbox>
-            <flexbox-item :span="3">
-              <div class="tl">Inprogress</div>
+            <flexbox-item :span="6">
+              <div class="tl fs20">Inprogress</div>
             </flexbox-item>
-            <flexbox-item :span="9">
-              <div class="tr">
-                <span class="tag-block fs12"> {{ progress }}% ({{ buyNumber }}/{{ totalNumber }})</span>
+            <flexbox-item :span="6">
+              <div class="tr fc3 fs16">
+                <span class="tag-block"> {{ progress }}% ({{ buyNumber }}/{{ totalNumber }})</span>
               </div>
             </flexbox-item>
           </flexbox>
@@ -32,17 +32,17 @@
       </div>
     </div>
     <div class="item-box">
-      <div class="top-but" style="padding: 8px;">
+      <div class="top-but" style="padding: 8px;font-size: 20px;">
         <button-tab v-model="model">
-          <button-tab-item>Buy</button-tab-item>
-          <button-tab-item>Sell</button-tab-item>
-          <button-tab-item>Exchange</button-tab-item>
+          <button-tab-item><b>Buy</b></button-tab-item>
+          <button-tab-item><b>Sell</b></button-tab-item>
+          <button-tab-item><b>Exchange</b></button-tab-item>
         </button-tab>
       </div>
       <!--BUY-->
       <div v-if="model === 0">
         <div class="item-row">
-          <div class="tip fs12 fc3"><i class="iconfont icon-dengpao1"></i> {{ stateInfo }} </div>
+          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao1"></i> {{ stateInfo }} </div>
         </div>
         <div class="item-row">
           <flexbox>
@@ -50,7 +50,7 @@
               <div class="tl fc2 fs14">Current Price</div>
             </flexbox-item>
             <flexbox-item>
-              <div class="tr fs14 fc3">
+              <div class="tr fs16 fc3">
                 {{ price }} {{ tokenName }} per NFT
               </div>
             </flexbox-item>
@@ -59,7 +59,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc2 fs14">Quantity<br /><span class="fs10"> Balance: {{ tokenBalance }}</span> </div>
+              <div class="tl fc2 fs16">Quantity<br /><span class="fs10"> Balance: {{ tokenBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -75,7 +75,7 @@
       <!--EXchange -->
       <div v-else-if="model === 2">
         <div class="item-row">
-          <div class="tip fc3 fs12"><i class="iconfont icon-zhihuan fs12"></i>
+          <div class="tip fc3 fs16"><i class="iconfont icon-zhihuan fs16"></i>
             Exchange Rate： 1 NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv }}</b> {{
                 tokenName2
             }}
@@ -84,7 +84,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc fs12">NTF<br /><span class="fs10">Balance: {{ ntfBalance }}</span> </div>
+              <div class="tl fc fs14">NTF<br /><span class="fs10">Balance: {{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -100,16 +100,16 @@
       <!--sell-->
       <div v-else>
         <div class="item-row">
-          <div class="tip fs10 fc3"><i class="iconfont icon-dengpao2"></i> Unexchanged NFTs can be sold back within 7
+          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao2"></i> Unexchanged NFTs can be sold back within 7
             days </div>
         </div>
         <div class="item-row">
           <flexbox>
             <flexbox-item>
-              <div class="tl fc2 fs14">Current Price</div>
+              <div class="tl fc2 fs16">Current Price</div>
             </flexbox-item>
             <flexbox-item>
-              <div class="tr fs14 fc3">
+              <div class="tr fs16 fc3">
                 {{ price }} {{ tokenName }} per NFT
               </div>
             </flexbox-item>
@@ -118,7 +118,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc2 fs14">Quantity<br /><span class="fs10">Balance:{{ ntfBalance }}</span> </div>
+              <div class="tl fc2 fs16">Quantity<br /><span class="fs10">Balance:{{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -134,7 +134,7 @@
       <div style="padding: 16px 8px;">
         <div class="line2"></div>
       </div>
-      <div class="item-row fc3">
+      <div class="item-row fc3 fs16">
         <flexbox>
           <flexbox-item :span="4">
             <div class="tl">
@@ -237,7 +237,6 @@ import { Project } from '../abi/Project';
 import { ethers } from 'ethers';
 import { ERC20, Erc20Abi } from '../abi/Erc20';
 import { ERC721 } from '../abi/ERC721';
-import { ADDRESS } from '../abi/Provider';
 import { getBalance } from '../abi/Contract';
 import Clipboard from "clipboard";
 import Global from '../abi/Global';

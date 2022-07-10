@@ -103,7 +103,6 @@ export default {
         }
     },
     mounted() {
-
         this.$http.get(Global.RequestApi + '/web/projects', {
             params: {
                 pageIndex: 0,

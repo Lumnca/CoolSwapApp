@@ -97,7 +97,7 @@
                                 placeholder="Search name or paste address" />
                         </div>
                         <div style="max-height: 240px;overflow-y: auto;margin-top: 12px;">
-                            <div class="list-option tl font-or" v-for="item in filterList" :key="item.symbol"
+                            <div class="list-option tl font-or" v-for="item in filterList" :key="item.address"
                                 @click="selectType(item)">
                                 <flexbox>
                                     <flexbox-item :span="1">
@@ -115,21 +115,24 @@
             </div>
             <div>
                 <x-dialog v-model="setVisible" class="dialog-width">
-                    <div class="dialog-title">Swap Set <span class="close" @click="setVisible = false">
+                    <div class="dialog-title">Swap Setting <span class="close" @click="setVisible = false">
                             <i class="iconfont icon-guanbi"></i>
                         </span></div>
                     <div class="dialog-body">
                         <div class="dialog-item">
                             Slippage Tolerance
-                        </div> 
+                        </div>
                         <div class="dialog-item ">
-                            <button @click="setSlippage(1)" class="button-s " :dis="slippageType==1?'1':''">0.25%</button>
-                            <button @click="setSlippage(2)" class="button-s ml8" :dis="slippageType==2?'1':''">0.50%</button>
-                            <button @click="setSlippage(3)" class="button-s ml8" :dis="slippageType==3?'1':''">0.75%</button>
-                            <button @click="setSlippage(4)" class="button-s ml8" :dis="slippageType==4?'1':''">1.00%</button>
+                            <button @click="setSlippage(1)" class="button-s "
+                                :dis="slippageType == 1 ? '1' : ''">0.25%</button>
+                            <button @click="setSlippage(2)" class="button-s ml8"
+                                :dis="slippageType == 2 ? '1' : ''">0.50%</button>
+                            <button @click="setSlippage(3)" class="button-s ml8"
+                                :dis="slippageType == 3 ? '1' : ''">0.75%</button>
+
                         </div>
                     </div>
-    
+
                 </x-dialog>
             </div>
         </div>
@@ -138,11 +141,11 @@
 
 <script>
 import { Flexbox, FlexboxItem, Divider, XInput, Group, XButton, Cell, XDialog, XSwitch, AjaxPlugin, Panel, Radio } from 'vux'
-import { swapContract, getBalance } from '../abi/Contract';
+import { getBalance } from '../abi/Contract';
 import { ethers } from 'ethers';
 import { Erc20Abi } from '../abi/Erc20'
 import { UniswapV2Router } from '../abi/UniswapV2Router';
-import { ADDRESS, BNBAbiADDRESS, webHttpProvider } from '../abi/Provider';
+import { Router, WBNB } from '../abi/Provider';
 import { BNBSwap } from '../abi/BNBSwap';
 export default {
     name: 'Swap',
@@ -172,13 +175,14 @@ export default {
             slippage: 0.005,
             limit: 99999999,
             perText: '',
-            slippageType : 1,
+            slippageType: 1,
         }
     },
     methods: {
         setSlippage(i) {
             this.slippageType = i;
-            this.slippage = i *0.0025;
+            this.slippage = i * 0.0025;
+            this.setVisible = false
         },
         toast(txt) {
             this.$vux.toast.text(txt, 'top');
@@ -201,6 +205,7 @@ export default {
         selectType(v) {
             this.toValue = '';
             this.fromValue = '';
+            this.dialogVisible = false;
             if (this.currentValue === 0) {
                 this.to = v;
                 this.getBalance(true);
@@ -210,7 +215,6 @@ export default {
                 this.getBalance(false);
             }
             this.isApprove();
-            this.dialogVisible = false;
             this.toast('you select ' + v.symbol)
         },
         changeV1() {
@@ -230,12 +234,15 @@ export default {
                 return;
             }
             if (this.toValue > 0) {
-                if (!this.to.address) this.to.address = BNBAbiADDRESS;
-                if (!this.from.address) this.from.address = BNBAbiADDRESS;
+                if (!this.to.address) this.to.address = WBNB;
+                if (!this.from.address) this.from.address = WBNB;
                 this.isComputed1 = true;
-                swapContract.getAmountsOut(ethers.utils.parseEther(this.toValue), [this.to.address, this.from.address]).then(v => {
+
+                let provider = new ethers.providers.Web3Provider(ethereum, 'any');
+                let contract = new ethers.Contract(Router, UniswapV2Router.abi, provider.getSigner());
+                contract.getAmountsOut(ethers.utils.parseEther(this.toValue), [this.to.address, this.from.address]).then(v => {
                     let v1 = ethers.utils.formatEther(v[1]);
-                    this.fromValue = v1;
+                    this.fromValue = Number(v1).toPrecision(16);
                     this.isComputed1 = false;
                     this.per()
                 })
@@ -263,18 +270,20 @@ export default {
                 return;
             }
             if (this.fromValue >= 0) {
-                if (!this.to.address) this.to.address = BNBAbiADDRESS;
-                if (!this.from.address) this.from.address = BNBAbiADDRESS;
+                if (!this.to.address) this.to.address = WBNB;
+                if (!this.from.address) this.from.address = WBNB;
 
                 this.isComputed2 = true;
 
-                swapContract.getAmountsIn(
+                let provider = new ethers.providers.Web3Provider(ethereum, 'any');
+                let contract = new ethers.Contract(Router, UniswapV2Router.abi, provider.getSigner());
+                contract.getAmountsIn(
                     ethers.utils.parseEther(this.fromValue),
                     [this.to.address, this.from.address]
                 )
                     .then(v => {
                         let v1 = ethers.utils.formatEther(v[0]);
-                        this.toValue = v1;
+                        this.toValue = Number(v1).toPrecision(16);
                         this.isComputed2 = false;
                         this.per()
                     })
@@ -306,13 +315,15 @@ export default {
                 else this.balance2 = 0.00;
             }
             else {
-                if (this.to.symbol === "BNB") {
+                if (this.to.symbol === "BNB") {           
                     provider.getBalance(this.getAccount()).then(res => {
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
                 }
                 else {
+                    
                     getBalance(this.to.address, provider, this.getAccount()).then(res => {
+                      
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
                 }
@@ -322,6 +333,7 @@ export default {
                     })
                 }
                 else {
+                      console.log(this.from.address, provider, this.getAccount())
                     getBalance(this.from.address, provider, this.getAccount()).then(res => {
                         this.balance2 = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
@@ -340,7 +352,7 @@ export default {
         swapWBNB() {
             //BNB-> WBNB交换合约
             let provider = new ethers.providers.Web3Provider(ethereum, 'any');
-            let contract = new ethers.Contract(BNBAbiADDRESS, BNBSwap, provider.getSigner());
+            let contract = new ethers.Contract(WBNB, BNBSwap, provider.getSigner());
             contract.deposit({
                 value: ethers.utils.parseEther(this.toValue.toString())
             }).then(res => {
@@ -354,7 +366,7 @@ export default {
         swapBNB() {
             //WBNB->BNB取出
             let provider = new ethers.providers.Web3Provider(ethereum, 'any');
-            let contract = new ethers.Contract(BNBAbiADDRESS, BNBSwap, provider.getSigner());
+            let contract = new ethers.Contract(WBNB, BNBSwap, provider.getSigner());
             contract.withdraw(
                 ethers.utils.parseEther(this.toValue.toString())
             ).then(res => {
@@ -366,11 +378,11 @@ export default {
             })
         },
         swapETHforToken() {
-            let contract = new ethers.Contract(ADDRESS, UniswapV2Router.abi, this.getWeb3Provider().getSigner())
+            let contract = new ethers.Contract(Router, UniswapV2Router.abi, this.getWeb3Provider().getSigner())
             contract.swapExactETHForTokens(
                 ethers.utils.parseEther((this.fromValue * (1 - this.slippage)).toFixed(this.from.decimals)),//换多少钱
                 //ethers.utils.parseUnits((this.fromValue * (1 - 0.005)).toString(), this.from.decimals),//转多少,多少位
-                [BNBAbiADDRESS, this.from.address],//BNB->Token
+                [WBNB, this.from.address],//BNB->Token
                 this.getAccount(),
                 Math.floor((new Date().getTime() + 1000 * 60) / 1000)//响应时间
                 , {
@@ -384,13 +396,13 @@ export default {
                 })
         },
         swapTokensForETH() {
-            let contract = new ethers.Contract(ADDRESS, UniswapV2Router.abi, this.getWeb3Provider().getSigner())
+            let contract = new ethers.Contract(Router, UniswapV2Router.abi, this.getWeb3Provider().getSigner())
             contract.swapExactTokensForETH(
                 ethers.utils.parseEther(this.toValue.toString()),
                 ethers.utils.parseEther((this.fromValue * (1 - this.slippage)).toFixed(this.from.decimals)),
                 //ethers.utils.parseUnits(Number(this.toValue).toFixed(this.to.decimals), this.to.decimals),//转多少,多少位
                 //ethers.utils.parseUnits((this.fromValue * (1 - 0.005)).toFixed(this.from.decimals), this.from.decimals),
-                [this.to.address, BNBAbiADDRESS],
+                [this.to.address, WBNB],
                 this.getAccount(),
                 Math.floor((new Date().getTime() + 1000 * 60) / 1000)
             ).then(res => {
@@ -401,7 +413,7 @@ export default {
             })
         },
         swapTokensForTokens() {
-            let contract = new ethers.Contract(ADDRESS, UniswapV2Router.abi, this.getWeb3Provider().getSigner());
+            let contract = new ethers.Contract(Router, UniswapV2Router.abi, this.getWeb3Provider().getSigner());
             contract.swapExactTokensForTokens(
                 ethers.utils.parseEther(this.toValue.toString()),
                 ethers.utils.parseEther((this.fromValue * (1 - this.slippage)).toFixed(this.from.decimals)),
@@ -430,7 +442,7 @@ export default {
         },
         approve(address) {
             var contract = new ethers.Contract(address || this.to.address, Erc20Abi.abi, this.getWeb3Provider().getSigner())
-            contract.approve(ADDRESS, ethers.utils.parseEther(this.limit.toFixed(4))).then(res => {
+            contract.approve(Router, ethers.utils.parseEther(this.limit.toFixed(4))).then(res => {
                 this.loadWaitTip();
                 res.wait(1).then(() => {
                     this.needApprove = false;
@@ -444,7 +456,7 @@ export default {
         allowance(address, value) {
             var contract = new ethers.Contract(address || this.to.address, Erc20Abi.abi, this.getWeb3Provider().getSigner());
             return new Promise((res, rej) => {
-                contract.allowance(this.getAccount(), ADDRESS).then(data => {
+                contract.allowance(this.getAccount(), Router).then(data => {
                     if (Number(data) > value) {
                         res(true);
                     }
@@ -527,7 +539,6 @@ import Global from '../abi/Global';
     border-radius: 4px;
     margin-top: 16px;
     font-size: 20px;
-    min-width: 280px;
 }
 
 
@@ -540,9 +551,8 @@ import Global from '../abi/Global';
 .but {
     margin-top: 16px;
 }
-.dialog-item{
-    padding: 8px;
-    min-width: 292px;
-}
 
+.dialog-item {
+    padding: 8px;
+}
 </style>
