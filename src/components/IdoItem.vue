@@ -100,7 +100,7 @@
       <!--sell-->
       <div v-else>
         <div class="item-row">
-          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao2"></i> {{$t('p7')}}</div>
+          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao2"></i> {{$t('u7')}}</div>
         </div>
         <div class="item-row">
           <flexbox>
@@ -290,6 +290,7 @@ export default {
       tokenId: '',
       model: 0,
       bv: 10,
+      outTime : false,
       tokenName: 'Unknow',
       tokenName2: 'Unknow',
       priceName: '',
@@ -306,7 +307,7 @@ export default {
       startSaleTime: 'Start in 0d 00:00:00',
       tokenBalance: 0,
       state: [0, 0],//0:未开始,1:正在开始，-1:结束,
-      stateInfo: 'Button',
+      stateInfo: 'NO INFO',
       approves: [false, false]//NTF 与 Token的授权
     }
   },
