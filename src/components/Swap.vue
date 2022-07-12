@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-         <div class="swap-box" style="margin-top: 32px;">
+         <div style="margin-top: 32px;">
             <swiper1></swiper1>
          </div>
         <div>

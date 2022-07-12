@@ -10,8 +10,7 @@
                 </flexbox-item>
                 <flexbox-item :span="10">
                     <div class="tr fc3">
-                        <i class="iconfont icon-telegram" @click="openWeb(0)" style="font-size:24px"></i>
-
+                      
                         <i class="iconfont icon-shejiaotubiao-20" @click="openWeb(1)"
                             style="font-size:24px; margin-left: 8px;"></i>
                     </div>

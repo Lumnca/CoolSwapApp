@@ -11,9 +11,9 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      /*'/api': {
+     /* '/api': {
         //target: 'https://coolswap.finance/',//线上
-        //target : 'https://dev.coolswap.finance/',
+        target : 'https://dev.coolswap.finance/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

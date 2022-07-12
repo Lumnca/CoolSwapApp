@@ -1,21 +1,20 @@
 <template>
-    <div>
-        <group-title></group-title>
-        <group-title></group-title>
+    <div style="border: 1px solid #fff;">
         <swiper :list="demo01_list" v-model="demo01_index" @on-index-change="demo01_onIndexChange"></swiper>
     </div>
 </template>
 
 <script>
 import { Swiper, GroupTitle, SwiperItem, XButton, Divider } from 'vux'
+import Global from '../abi/Global'
 
 const baseList = [{
     url: 'javascript:',
-    img: '/static/cs.png',
+    img: '',
     title: 'CoolSwap'
 }, {
     url: 'javascript:',
-    img: 'static/cs.png',
+    img: '',
     title: 'CoolSwap'
 }, {
     url: 'javascript:',
@@ -45,9 +44,24 @@ export default {
     data() {
         return {
             demo01_list: baseList,
-            demo01_index : 0
+            demo01_index: 0,
+            slider: []
         }
-    }
+    },
+    mounted() {
+        this.slider = [];
+        this.$http.get(Global.RequestApi + '/web/slider').then(({ data }) => {
+            let list = data.data.mobile[this.$i18n.locale];
+            list.forEach(e => {
+                this.slider.push({
+                    url: 'javascript:',
+                    img: e,
+                    title: ''
+                })
+            })
+            this.demo01_list = this.slider;
+        })
+    },
 }
 </script>
 
