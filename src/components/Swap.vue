@@ -126,8 +126,8 @@
                             {{ $t('slippage') }}
                         </div>
                         <div class="dialog-item">
-                            <input v-model="slippage" placeholder="0" type="number" class="input-s"
-                                style="width: 100%;" />
+                            <input v-model="sv" :placeholder="slippage*100" type="number" class="input-s"
+                                style="width: 100%;" @change="slippageComput()"/>
                         </div>
                         <div class="dialog-item ">
                             <button @click="setSlippage(1)" class="button-s "
@@ -196,6 +196,7 @@ export default {
             limit: 99999999,
             perText: '',
             slippageType: 1,
+            sv : ''
         }
     },
     methods: {
@@ -203,6 +204,10 @@ export default {
             this.slippageType = i;
             this.slippage = i * 0.0025;
             this.setVisible = false
+            this.sv = '';
+        },
+        slippageComput(){
+            this.slippage = Number((this.sv / 100).toPrecision(2));
         },
         toast(txt) {
             this.$vux.toast.text(txt, 'top');
@@ -524,6 +529,7 @@ export default {
             let tmp = this.toValue;
             this.toValue = this.fromValue;
             this.fromValue = tmp;
+            this.per();
         },
         loadWaitTip(txt) {
             this.$vux.loading.show({

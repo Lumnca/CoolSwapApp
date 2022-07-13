@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div  @click="toView('Swap')">
+        <div  @click="toView('Announcement')">
             <div class="menu-item">
                 <div>
                     <div class="icon-block tr">
