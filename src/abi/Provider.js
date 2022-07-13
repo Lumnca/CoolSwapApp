@@ -21,7 +21,7 @@ const ChainId  = 97;
 const ChainName  = 'Chain97';
 const rpcUrl  = 'https://bsc-dataseed.binance.org';
 const strId = '0x61';
-*/
+//*/
 
 
 export { Router,WBNB,ChainId,ChainName,rpcUrl,strId };

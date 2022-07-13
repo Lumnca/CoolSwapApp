@@ -3,7 +3,7 @@
         <flexbox>
             <flexbox-item>
                 <div class="flex-demo">
-                    <img src="../assets/cool.png">
+                    <a href="/"><img src="../assets/cool.png"/></a>
                     <span class="pd8" @click="openMenu()">
                         <i class="fs32 iconfont icon-caidan1"></i>
                     </span>
