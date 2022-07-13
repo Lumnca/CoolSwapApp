@@ -3,23 +3,32 @@
         <flexbox>
             <flexbox-item>
                 <div class="flex-demo">
-                    <img src="../assets/cool.png">
+                    <a href="/"><img src="../assets/cool.png"/></a>
                     <span class="pd8" @click="openMenu()">
                         <i class="fs32 iconfont icon-caidan1"></i>
-                        <span class="fs18" @click="openMenu()">
-                            EN
-                        </span>
                     </span>
-
                 </div>
-            </flexbox-item>
-            <flexbox-item>
+            </flexbox-item >
+            <flexbox-item :span="7">
                 <div class="topb tr">
-                    <button @click="toConnectWallet()" class="button-m">
-                        <span v-if="account"> <i class="iconfont icon-qianbao1"></i> {{ account }}<i
-                                class="el-icon-arrow-down"></i></span>
-                        <span v-else>Connect Wallet</span>
-                    </button>
+                    <flexbox>
+                        <flexbox-item>
+                            <button @click="toConnectWallet()" class="button-m">
+                                <span v-if="account"> <i class="iconfont icon-qianbao1"></i> {{ account }}<i
+                                        class="el-icon-arrow-down"></i></span>
+                                <span v-else>{{ $t('cw') }}</span>
+                            </button>
+                        </flexbox-item>
+                        <flexbox-item :span="2">
+                            <button class="button-m">
+                                <span @click="changeLangage()">
+                                    {{ $t('lang') }}
+                                </span>
+                            </button>
+                        </flexbox-item>
+                    </flexbox>
+
+
                 </div>
             </flexbox-item>
         </flexbox>
@@ -31,11 +40,13 @@
                                 <i class="iconfont icon-guanbi"></i>
                             </span></div>
                         <div class="dialog-body  itxst">
-                            Your Address : {{ account }} &nbsp;<i @click="copy()" class="iconfont icon-fuzhi"></i>
+                            {{ $t('YourAddress') }}: {{ account }} &nbsp;<i @click="copy()"
+                                class="iconfont icon-fuzhi"></i>
                         </div>
 
                         <div class="dialog-footer">
-                            <button class="button-s" @click="logout()">logout <i class="iconfont icon-tuichu"></i>
+                            <button class="button-s" @click="logout()">{{ $t('Logout') }} <i
+                                    class="iconfont icon-tuichu"></i>
                             </button>
                         </div>
 
@@ -76,6 +87,11 @@ export default {
         }
     },
     methods: {
+        changeLangage() {
+            this.$i18n.locale = (this.$i18n.locale == 'en' ? 'zh' : 'en');
+            localStorage.setItem('_en', this.$i18n.locale);
+            location.reload();
+        },
         tipMessage(txt, type) {
             this.msg = txt;
             this.type = type ? 'warn' : 'success';
@@ -177,6 +193,8 @@ export default {
         }
     },
     mounted() {
+        //语言检测
+        this.$i18n.locale = localStorage.getItem('_en') || 'en';
         //插件检测
         ethereum.removeAllListeners();
         if (typeof ethereum !== 'undefined') {

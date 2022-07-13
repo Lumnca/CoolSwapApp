@@ -2,13 +2,13 @@
     <div class="">
         <div class="item-box">
             <div class="item-row fc1">
-                <b>{{ item.title}}</b>
+                <b>{{  $i18n.locale=='en'?item.title:item.titleCN }}</b>
             </div>
             <div class="item-row">
                 <span class="tag-m tag-block">{{ item.createTime }}</span>
             </div>
             <div class="item-row fs14 fc3 wap">
-                {{ item.content }}
+               {{ $i18n.locale=='en'?item.content :item.contentCN}}
             </div>
         </div>
     </div>

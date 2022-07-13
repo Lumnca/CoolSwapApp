@@ -4,7 +4,7 @@
             <flexbox>
                 <flexbox-item>
                     <div class="flex-demo font-or fs20">
-                        Swap
+                        {{ $t('swap') }}
                     </div>
                 </flexbox-item>
                 <flexbox-item>
@@ -22,7 +22,7 @@
                     <span>
                         <i class="iconfont icon-xiala icon-m"></i>
                     </span>
-                    <span class="fr fc2">Balance: {{ balance }}</span>
+                    <span class="fr fc2"> {{ $t('balance') }}: {{ balance }}</span>
                 </div>
                 <div>
                     <input v-model="toValue" :dis="isComputed2 ? '1' : ''" @input="changeV1()" placeholder="0"
@@ -37,7 +37,7 @@
                     <span>
                         <i class="iconfont icon-xiala  icon-m"></i>
                     </span>
-                    <span class="fr fc2">Balance: {{ balance2 }}</span>
+                    <span class="fr fc2">{{ $t('balance') }}: {{ balance2 }}</span>
                 </div>
                 <div>
                     <input v-model="fromValue" :dis="isComputed1 ? '1' : ''" @input="changeV2()" placeholder="0"
@@ -46,9 +46,9 @@
                 <br />
                 <div>
                     <flexbox>
-                        <flexbox-item :span="1">
+                        <flexbox-item :span="3">
                             <div class="font-or fs14">
-                                Price
+                                {{ $t('price') }}
                             </div>
                         </flexbox-item>
                         <flexbox-item>
@@ -63,7 +63,7 @@
                     <flexbox>
                         <flexbox-item>
                             <div class="font-or fs14">
-                                Slippage Tolerance
+                                {{ $t('slippage') }}
                             </div>
                         </flexbox-item>
                         <flexbox-item>
@@ -75,26 +75,29 @@
                 </div>
                 <div class="but">
                     <button class="button-m" @click="swap()">
-                        <span v-if="needApprove" class="font-or fs16">Approve</span>
-                        <span v-else-if="isNullValue()" class="font-or fs16"> Enter Amount</span>
-                        <span v-else-if="!isCanExchange()" class="font-or fs16">Insufficient {{ this.to.symbol }}
-                            Balance
+                        <span v-if="needApprove" class="font-or fs16">{{ $t('Approve') }}</span>
+                        <span v-else-if="isNullValue()" class="font-or fs16">{{ $t('EnterAmount') }}</span>
+                        <span v-else-if="!isCanExchange()" class="font-or fs16">
+                            {{ $t('Insufficient', { type: this.to.symbol }) }}
                         </span>
-                        <span v-else class="font-or fs16">Swap</span>
+                        <span v-else class="font-or fs16">{{ $t('swap') }}</span>
                     </button>
                 </div>
             </div>
         </div>
+        <div style="margin-top: 32px;">
+            <swiper1></swiper1>
+        </div>
         <div>
             <div>
                 <x-dialog v-model="dialogVisible" class="dialog-width">
-                    <div class="dialog-title">Token List <span class="close" @click="dialogVisible = false">
+                    <div class="dialog-title">{{ $t('tokenList') }} <span class="close" @click="dialogVisible = false">
                             <i class="iconfont icon-guanbi"></i>
                         </span></div>
                     <div class="dialog-body">
                         <div>
                             <input style="width: 95%;" @input="search()" v-model="searchValue" class="input-b"
-                                placeholder="Search name or paste address" />
+                                :placeholder="$t('Snopa')" />
                         </div>
                         <div style="max-height: 240px;overflow-y: auto;margin-top: 12px;">
                             <div class="list-option tl font-or" v-for="item in filterList" :key="item.address"
@@ -115,22 +118,28 @@
             </div>
             <div>
                 <x-dialog v-model="setVisible" class="dialog-width">
-                    <div class="dialog-title">Swap Setting <span class="close" @click="setVisible = false">
+                    <div class="dialog-title">{{ $t('Setting') }} <span class="close" @click="setVisible = false">
                             <i class="iconfont icon-guanbi"></i>
                         </span></div>
                     <div class="dialog-body">
                         <div class="dialog-item">
-                            Slippage Tolerance
+                            {{ $t('slippage') }}
+                        </div>
+                        <div class="dialog-item">
+                            <input v-model="slippage" placeholder="0" type="number" class="input-s"
+                                style="width: 100%;" />
                         </div>
                         <div class="dialog-item ">
                             <button @click="setSlippage(1)" class="button-s "
-                                :dis="slippageType == 1 ? '1' : ''">0.25%</button>
+                                :dis="slippage == 0.0025 ? '1' : ''">0.25%</button>
                             <button @click="setSlippage(2)" class="button-s ml8"
-                                :dis="slippageType == 2 ? '1' : ''">0.50%</button>
+                                :dis="slippage == 0.0050 ? '1' : ''">0.50%</button>
                             <button @click="setSlippage(3)" class="button-s ml8"
-                                :dis="slippageType == 3 ? '1' : ''">0.75%</button>
-
+                                :dis="slippage == 0.0075 ? '1' : ''">0.75%</button>
                         </div>
+
+
+
                     </div>
 
                 </x-dialog>
@@ -140,7 +149,7 @@
 </template>
 
 <script>
-import { Flexbox, FlexboxItem, Divider, XInput, Group, XButton, Cell, XDialog, XSwitch, AjaxPlugin, Panel, Radio } from 'vux'
+import { Flexbox, FlexboxItem, Divider, XInput, Group, XButton, Cell, XDialog, XSwitch, AjaxPlugin, Panel, Radio, Swiper } from 'vux'
 import { getBalance } from '../abi/Contract';
 import { ethers } from 'ethers';
 import { Erc20Abi } from '../abi/Erc20'
@@ -150,8 +159,19 @@ import { BNBSwap } from '../abi/BNBSwap';
 export default {
     name: 'Swap',
     components: {
-        Flexbox, FlexboxItem, Divider, XInput, Group, XButton, Cell, XDialog,
-        XSwitch, Panel, Radio
+        Flexbox,
+        FlexboxItem,
+        Divider,
+        XInput,
+        Group,
+        XButton,
+        Cell,
+        XDialog,
+        XSwitch,
+        Panel,
+        Radio,
+        Swiper,
+        Swiper1
     },
     data() {
         return {
@@ -315,15 +335,15 @@ export default {
                 else this.balance2 = 0.00;
             }
             else {
-                if (this.to.symbol === "BNB") {           
+                if (this.to.symbol === "BNB") {
                     provider.getBalance(this.getAccount()).then(res => {
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
                 }
                 else {
-                    
+
                     getBalance(this.to.address, provider, this.getAccount()).then(res => {
-                      
+
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
                 }
@@ -333,7 +353,7 @@ export default {
                     })
                 }
                 else {
-                      console.log(this.from.address, provider, this.getAccount())
+                    console.log(this.from.address, provider, this.getAccount())
                     getBalance(this.from.address, provider, this.getAccount()).then(res => {
                         this.balance2 = Number(ethers.utils.formatEther(res)).toFixed(5);
                     })
@@ -501,6 +521,9 @@ export default {
             let tv = this.balance;
             this.balance = this.balance2;
             this.balance2 = tv;
+            let tmp = this.toValue;
+            this.toValue = this.fromValue;
+            this.fromValue = tmp;
         },
         loadWaitTip(txt) {
             this.$vux.loading.show({
@@ -526,6 +549,7 @@ export default {
 }
 import axios from 'axios';
 import Global from '../abi/Global';
+import Swiper1 from './Swiper.vue';
 </script>
 
 <style>

@@ -2,9 +2,9 @@
     <div>
         <div class="top-but">
             <button-tab v-model="status">
-                <button-tab-item @on-item-click="changeType(0)">Live</button-tab-item>
-                <button-tab-item @on-item-click="changeType(1)">Upcoming</button-tab-item>
-                <button-tab-item @on-item-click="changeType(2)">Ended</button-tab-item>
+                <button-tab-item @on-item-click="changeType(0)">{{$t('live')}}</button-tab-item>
+                <button-tab-item @on-item-click="changeType(1)">{{$t('upcoming')}}</button-tab-item>
+                <button-tab-item @on-item-click="changeType(2)">{{$t('ended')}}</button-tab-item>
             </button-tab>
         </div>
         <div class="ido-box">
@@ -18,20 +18,20 @@
                             <img :src="item.imgData" height="243" width="100%" style="object-fit: fill;" />
                         </div>
                         <div class="fs20 item-text fc4">
-                            {{ item.title }}
+                            {{  $i18n.locale=='en'?item.title:item.titleCN }}
                         </div>
                         <div class="item-text fd">
-                            <span v-if="status == 2" class="tag-l"> End of sale</span>
-                            <span v-else-if="status == 1" class="tag-l"> Start in {{ timeShow(item.startTime)}}</span>
-                            <span v-else class="tag-l"> End in {{ timeShow(item.endTime) }}</span>
+                            <span v-if="status == 2" class="tag-l"> {{$t('eso')}} </span>
+                            <span v-else-if="status == 1" class="tag-l">{{$t('stin')}}  {{ timeShow(item.startTime)}}</span>
+                            <span v-else class="tag-l">{{$t('edin')}} {{ timeShow(item.endTime) }}</span>
                         </div>
-                        <div class="fc3 item-text fs14 ">
-                            {{ item.description }}
+                        <div class="fc3 item-text fs14 item-desw">
+                            {{ $i18n.locale=='en'?item.description:item.descriptionCN }}
                         </div>
 
                         <div class="tc item-text bd">
                             <button @click="toItem(item.pid)" class="button-l">
-                                Check
+                                {{$t('check')}}
                             </button>
                         </div>
                     </div>
@@ -66,6 +66,10 @@ export default {
         }
     },
     methods: {
+        bw(v){
+            if(v>10)return v;
+            else return '0'+v;
+        },
         timeShow(time) {
             let date = new Date(time);
             let now = new Date();
@@ -74,7 +78,7 @@ export default {
             let h = Math.floor(secord / (60 * 60)) % 24;
             let m = Math.floor(secord / 60) % 60;
             let s = secord % 60;
-            return `${d}d ${h.toString().padZero(2)}:${m.toString().padZero(2)}:${s.toString().padZero(2)}`;
+            return `${this.bw(d)}d ${this.bw(h)}:${this.bw(m)}:${this.bw(s)}`;
         },
         toItem(id) {
             this.$router.push({
@@ -139,6 +143,14 @@ export default {
     border: 1px solid #ececec;
     border-radius: 10px;
     padding: 8px;
+}
+
+.item-desw{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    line-height: 20px;
 }
 
 

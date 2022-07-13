@@ -1,17 +1,45 @@
 <template>
     <div>
         <div class="line"></div>
-        <div v-for="item in menuList" :key="item.name" @click="toView(item.path)">
+        <div  @click="toView('Swap')">
             <div class="menu-item">
                 <div>
                     <div class="icon-block tr">
-                        <i :class="item.icon"></i>
+                        <i class="icon iconfont icon-zhihuan"></i>
                     </div>
                 </div>
                 <div class="tml">
-                    <span class="font-or">{{ item.name }}</span>
+                    <span class="font-or">{{ $t('swap')}}</span>
                     <br />
-                    <small class="c-info fs14">{{ item.description }}</small>
+                    <small class="c-info fs14">{{ $t('ttii') }}</small>
+                </div>
+            </div>
+        </div>
+        <div  @click="toView('Ido')">
+            <div class="menu-item">
+                <div>
+                    <div class="icon-block tr">
+                        <i class="icon iconfont icon-huojian"></i>
+                    </div>
+                </div>
+                <div class="tml">
+                    <span class="font-or">Lunchpad</span>
+                    <br />
+                    <small class="c-info fs14">{{ $t('bnun') }}</small>
+                </div>
+            </div>
+        </div>
+        <div  @click="toView('Swap')">
+            <div class="menu-item">
+                <div>
+                    <div class="icon-block tr">
+                        <i class="icon iconfont icon-zhihuan"></i>
+                    </div>
+                </div>
+                <div class="tml">
+                    <span class="font-or">{{$t('notice')}}</span>
+                    <br />
+                    <small class="c-info fs14">{{ $t('cac') }}</small>
                 </div>
             </div>
         </div>
@@ -29,20 +57,20 @@ export default {
         return {
             menuList: [
                 {
-                    name: "Swap",
-                    description: "Trade tokens in an instant",
+                    name: this.$t('swap'),
+                    description: this.$t('ttii'),
                     icon: 'icon iconfont icon-zhihuan',
                     path : 'Swap'
                 },
                 {
                     name: "Lunchpad",
-                    description: "Buy new unique NFTs",
+                    description: this.$t('bnun'),
                     icon: 'icon iconfont icon-huojian',
                     path : 'Ido'
                 },
                 {
-                    name: "Notice",
-                    description: "Coolswap activities",
+                    name: this.$t('notice'),
+                    description: this.$t('cac'),
                     icon: 'icon iconfont icon-shengyin',
                     path : 'Announcement'
                 }
