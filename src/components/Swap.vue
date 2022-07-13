@@ -100,7 +100,7 @@
                                 :placeholder="$t('Snopa')" />
                         </div>
                         <div style="max-height: 240px;overflow-y: auto;margin-top: 12px;">
-                            <div class="list-option tl font-or" v-for="item in filterList" :key="item.address"
+                            <div class="list-option tl font-or" v-for="(item,i) in filterList" :key="'key'+i"
                                 @click="selectType(item)">
                                 <flexbox>
                                     <flexbox-item :span="1">
@@ -331,7 +331,7 @@ export default {
         },
         getAccount() {
             if (!ethereum) return null;
-            return ethereum._state.accounts[0] || null;
+            return ethereum.selectedAddress || null;
         },
         getBalance(type) {
             let provider = new ethers.providers.Web3Provider(ethereum, 'any');
@@ -343,24 +343,34 @@ export default {
                 if (this.to.symbol === "BNB") {
                     provider.getBalance(this.getAccount()).then(res => {
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
+                         this.$vux.loading.hide();
+                    }).catch(error=>{
+                        this.toast(error);
                     })
                 }
                 else {
 
                     getBalance(this.to.address, provider, this.getAccount()).then(res => {
-
                         this.balance = Number(ethers.utils.formatEther(res)).toFixed(5);
+                         this.$vux.loading.hide();
+                    }).catch(error=>{
+                        this.toast(error);
                     })
                 }
                 if (this.from.symbol === "BNB") {
                     provider.getBalance(this.getAccount()).then(res => {
                         this.balance2 = Number(ethers.utils.formatEther(res)).toFixed(5);
+                         this.$vux.loading.hide();
+                    }).catch(error=>{
+                        this.toast(error);
                     })
                 }
                 else {
-                    console.log(this.from.address, provider, this.getAccount())
                     getBalance(this.from.address, provider, this.getAccount()).then(res => {
                         this.balance2 = Number(ethers.utils.formatEther(res)).toFixed(5);
+                         this.$vux.loading.hide();
+                    }).catch(error=>{
+                        this.toast(error);
                     })
                 }
             }
@@ -472,7 +482,6 @@ export default {
                 res.wait(1).then(() => {
                     this.needApprove = false;
                     this.toast('approve success!')
-
                     this.swap();
                 })
 
@@ -511,6 +520,7 @@ export default {
             return;
         },
         clear() {
+            this.loadWaitTip();
             this.toValue = '';
             this.fromValue = '';
             this.getBalance(true);
