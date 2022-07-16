@@ -75,6 +75,7 @@ export default {
     ttii:"即时交易代币",
     bnun : '购买新的NFT',
     cac  : 'Coolswap近期动态',
+    ITB : '{type}余额不足',
     tips: {
         cws: '连接钱包成功！',
         yna: '你需要授权才能进行操作！',
@@ -91,6 +92,7 @@ export default {
         l: '加载中...',
         lp : '正在处理中请等待！',
         cw : '您应该连接钱包以获取信息！',
-        ne : '网络异常'
+        ne : '网络异常',
+        yscw : '你需要连接钱包才能正常访问!'
     }
 }

@@ -73,6 +73,7 @@ export default {
     ttii:"Trade tokens in an instant",
     bnun : 'Buy new unique NFTs',
     cac  : 'Coolswap activities',
+    ITB : 'Insufficient {type} Balance',
     tips: {
         'cws': 'connect wallet success!',
         'yna': 'you need approve!',
@@ -89,7 +90,7 @@ export default {
         l: 'Loading',
         lp : 'Processing in progress, please wait!',
         cw : 'you should connect wallet!',
-        ne : 'Network error!'
-       
+        ne : 'Network error!',
+        yscw : 'you should connect wallet!'
     }
 }

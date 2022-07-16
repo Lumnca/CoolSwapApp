@@ -157,7 +157,7 @@
       <div class="item-row fc3">
         <div>
           <div v-if="model === 0">
-            <button class="button-l" :dis="buttonInfo == 'Buy Now'||'立即购买' ? '' : '1'" @click="buyBatch()">
+            <button class="button-l" :dis="buttonInfo == ('Buy Now'||'立即购买')&&tokenBalance>=aumout ? '' : '1'" @click="buyBatch()">
               {{ buttonInfo }}
             </button>
           </div>
@@ -330,6 +330,7 @@ export default {
       open(url);
     },
     isApprove() {
+      console.log("授权")
       let provider = new ethers.providers.Web3Provider(ethereum, 'any');
       var contract = new ethers.Contract(this.ido.nftAddress, ERC721, provider.getSigner())
       contract.isApprovedForAll(this.getAccount(), this.ido.address).then(res => {
@@ -689,8 +690,8 @@ export default {
     },
     changeNum() {
       this.aumout = this.num * this.price;
-      if(this.tokenBalance<this.aumout){
-        //this.buttonInfo = "Insufficient Token Balance";
+      if(this.tokenBalance<this.aumout && this.aumout>0){
+        this.buttonInfo = this.$t('ITB',{type:this.tokenName});
       }
       else{
         this.getStateInfo();
@@ -764,10 +765,11 @@ export default {
         pid: pid
       }
     }).then(({ data }) => {
-      console.log(data.data);
+      //console.log(data.data);
       this.ido = data.data;
       if (!this.getAccount()) {
         //this.$message("you should connect wallet!");
+        this.toast(this.$t('tips.yscw'));
       }
       else {
         this.refreash();
@@ -776,6 +778,7 @@ export default {
     }).catch(err => {
       console.log(err);
       //this.$message.error("Network error!");
+       this.toast(err);
       this.$vux.loading.hide();
     })
   },
