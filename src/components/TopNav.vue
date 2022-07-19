@@ -3,12 +3,12 @@
         <flexbox>
             <flexbox-item>
                 <div class="flex-demo">
-                    <a href="/"><img src="../assets/cool.png"/></a>
+                    <a href="/"><img src="../assets/cool.png" /></a>
                     <span class="pd8" @click="openMenu()">
                         <i class="fs32 iconfont icon-caidan1"></i>
                     </span>
                 </div>
-            </flexbox-item >
+            </flexbox-item>
             <flexbox-item :span="7">
                 <div class="topb tr">
                     <flexbox>
@@ -40,8 +40,8 @@
                                 <i class="iconfont icon-guanbi"></i>
                             </span></div>
                         <div class="dialog-body  itxst">
-                            {{ $t('YourAddress') }}: {{ account }} &nbsp;<i @click="copy()"
-                                class="iconfont icon-fuzhi"></i>
+                            {{ $t('YourAddress') }} &nbsp;<i @click="copy()"
+                                class="iconfont icon-fuzhi"></i> {{ accountAddress }} 
                         </div>
 
                         <div class="dialog-footer">
@@ -78,12 +78,13 @@ export default {
         return {
             active: 'ido',
             account: null,
-            flag: true,//防止多次调用
+            flag: true,
             tipVisible: false,
             logoutFlag: false,
             msg: '',
             type: 'success',
-            showToast: false
+            showToast: false,
+            accountAddress: ''
         }
     },
     methods: {
@@ -101,15 +102,15 @@ export default {
             this.$router.push('/home');
         },
         toConnectWallet() {
-            if (this.hasAccount() && !this.logoutFlag) {
+            if (this.accountAddress && !this.logoutFlag) {
                 this.showToast = true;
                 return;
             }
             if (ethereum) {
                 if (this.logoutFlag) {
                     this.logoutFlag = false;
-                    this.tipMessage('connect wallet success!')
-                    this.setAccount(this.getAccount());
+                    this.tipMessage(this.$t('tips.cws'))
+                    this.setAccount(this.accountAddress);
                 }
                 ethereum.request({ method: 'eth_requestAccounts' });
             }
@@ -119,9 +120,17 @@ export default {
         },
         getAccount() {
             if (!ethereum) return null;
-            return ethereum.selectedAddress;
+            else {
+                return new Promise((res, rej) => {
+                    ethereum.request({ method: 'eth_requestAccounts' }).then((accounts) => {
+                        this.accountAddress = accounts[0];
+                        res(accounts[0]);
+                    });
+                })
+            }
         },
         setAccount(str) {
+            this.accountAddress = str;
             this.account = str.substr(0, 4) + "..." + str.substr(str.length - 4, str.length);
             window.sessionStorage.setItem('_account', str.toString());
         },
@@ -172,23 +181,22 @@ export default {
             let clipboard = new Clipboard(".itxst", {
                 text: () => {
                     //返回需要复制的字符串
-                    return this.getAccount();
+                    return this.accountAddress;
                 },
             });
             clipboard.on("success", () => {
-
-                this.tipMessage('copy success!')
+                this.tipMessage(this.$t('tips.cs'))
                 clipboard.destroy();
             });
             clipboard.on("error", () => {
-                this.tipMessage("copy fail!", true);
+                this.tipMessage(this.$t('tips.cf'), true);
                 clipboard.destroy();
             });
         },
         logout() {
             this.showToast = false;
             this.logoutFlag = true;
-            this.tipMessage("lose connect!", true);
+            this.tipMessage(this.$t('tips.nc'),true);
             this.clearAccount();
         }
     },
@@ -196,53 +204,60 @@ export default {
         //语言检测
         this.$i18n.locale = localStorage.getItem('_en') || 'en';
         //插件检测
-        ethereum.removeAllListeners();
         if (typeof ethereum !== 'undefined') {
             console.log('MetaMask is installed!');
             ethereum.on('accountsChanged', (res) => {
-                if (this.flag) {
-                    if (res[0]) {
-                        this.tipMessage("connect wallet success!");
-                        this.setAccount(res[0]);
-                        if (ethereum.chainId !== ChainId) {
-                            this.changeNetwork();
-                        }
+                if (res[0]) {
+                    this.tipMessage(this.$t('tips.cws'));
+                    this.setAccount(res[0]);
+                    if (Number(ethereum.chainId) !== ChainId) {
+                        this.changeNetwork();
                     }
-                    else {
-                        this.tipMessage("lose connect!", true);
-                        this.clearAccount();
-                    }
-                    this.flag = false;
                 }
-
+                else {
+                    this.tipMessage(this.$t('tips.nc'), true);
+                    this.clearAccount();
+                }
+                location.reload();
             })
             ethereum.on('chainChanged', (res) => {
                 console.log('=====================chainChanged====================')
                 console.log(res);
+                location.reload();
             })
             ethereum.on('disconnect', () => {
                 console.log('=====================disconnect====================')
                 this.clearAccount();
             })
+            ethereum.on('connect', () => {
+                console.log('获取连接...');
+                var res = this.getAccount();
+                if (res) {
+                    res.then(account => {
+                        if (account && !this.logoutFlag) {
+                            this.setAccount(account);
+                        }
+                        //网络检测
+                        if (Number(ethereum.chainId) !== ChainId && ethereum.chainId) {
+                            console.log(ethereum.chainId)
+                            this.addNetwork();
+                        }
+                    })
+                }
+                else {
+                    this.$message(this.$t('tips.cw'));
+                }
+            });
         }
         else {
             this.tipMessage('MetaMask is not installed!', true);
         }
-        //网络检测
-        if (Number(ethereum.chainId) !== ChainId) {
-            this.addNetwork();
-        }
-        //账户信息获取
-        setTimeout(() => {
-            var account = this.getAccount();
-            this.flag = true;
-            if (account && !this.logoutFlag) {
-                this.setAccount(account);
-            }
-        }, 3000);
     },
     destroyed() {
-
+        ethereum.removeListener('connect');
+        ethereum.removeListener('disconnect');
+        ethereum.removeListener('chainChanged');
+        ethereum.removeListener('accountsChanged');
     },
 }
 </script>

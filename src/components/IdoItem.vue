@@ -8,7 +8,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="2">
-              <div class="tl fs20">{{$t('stage')}}</div>
+              <div class="tl fs20">{{ $t('stage') }}</div>
             </flexbox-item>
             <flexbox-item :span="10">
               <div class="tr fc3">
@@ -20,7 +20,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="6">
-              <div class="tl fs20">{{$t('inprogress')}}</div>
+              <div class="tl fs20">{{ $t('inprogress') }}</div>
             </flexbox-item>
             <flexbox-item :span="6">
               <div class="tr fc3 fs16">
@@ -34,9 +34,9 @@
     <div class="item-box">
       <div class="top-but" style="padding: 8px;font-size: 20px;">
         <button-tab v-model="model">
-          <button-tab-item><b>{{$t('buy')}}</b></button-tab-item>
-          <button-tab-item><b>{{$t('sell')}}</b></button-tab-item>
-          <button-tab-item><b>{{$t('Exchange')}}</b></button-tab-item>
+          <button-tab-item><b>{{ $t('buy') }}</b></button-tab-item>
+          <button-tab-item><b>{{ $t('sell') }}</b></button-tab-item>
+          <button-tab-item><b>{{ $t('Exchange') }}</b></button-tab-item>
         </button-tab>
       </div>
       <!--BUY-->
@@ -47,7 +47,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item>
-              <div class="tl fc2 fs14">{{$t('cp')}}</div>
+              <div class="tl fc2 fs14">{{ $t('cp') }}</div>
             </flexbox-item>
             <flexbox-item>
               <div class="tr fs16 fc3">
@@ -59,7 +59,9 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc2 fs16">{{$t('quantity')}}<br /><span class="fs10"> {{$t('balance')}}: {{ tokenBalance }}</span> </div>
+              <div class="tl fc2 fs16">{{ $t('quantity') }}<br /><span class="fs10"> {{ $t('balance') }}: {{
+                  tokenBalance
+              }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -76,7 +78,7 @@
       <div v-else-if="model === 2">
         <div class="item-row">
           <div class="tip fc3 fs16"><i class="iconfont icon-zhihuan fs16"></i>
-            {{$t('ER')}}： 1 NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv }}</b> {{
+            {{ $t('ER') }}： 1 NFT = <b style="color: rgba(148, 111, 206,1);">{{ bv }}</b> {{
                 tokenName2
             }}
           </div>
@@ -84,7 +86,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc fs14">NTF<br /><span class="fs10"> {{$t('balance')}}: {{ ntfBalance }}</span> </div>
+              <div class="tl fc fs14">NTF<br /><span class="fs10"> {{ $t('balance') }}: {{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -100,16 +102,16 @@
       <!--sell-->
       <div v-else>
         <div class="item-row">
-          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao2"></i> {{$t('u7')}}</div>
+          <div class="tip fs16 fc3"><i class="iconfont icon-dengpao2"></i> {{ $t('u7') }}</div>
         </div>
         <div class="item-row">
           <flexbox>
             <flexbox-item>
-              <div class="tl fc2 fs16">{{$t('cp')}}</div>
+              <div class="tl fc2 fs16">{{ $t('cp') }}</div>
             </flexbox-item>
             <flexbox-item>
               <div class="tr fs16 fc3">
-                {{ price }} {{ tokenName }} 
+                {{ price }} {{ tokenName }}
               </div>
             </flexbox-item>
           </flexbox>
@@ -117,7 +119,8 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc2 fs16">{{$t('quantity')}}<br /><span class="fs10">{{$t('balance')}}: {{ ntfBalance }}</span> </div>
+              <div class="tl fc2 fs16">{{ $t('quantity') }}<br /><span class="fs10">{{ $t('balance') }}: {{ ntfBalance
+              }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -137,9 +140,9 @@
         <flexbox>
           <flexbox-item :span="4">
             <div class="tl">
-              <span v-if="model == 1"> {{$t('Receive')}} </span>
+              <span v-if="model == 1"> {{ $t('Receive') }} </span>
               <span v-else-if="model == 2">Token</span>
-              <span v-else>  {{$t('Aumont')}}</span>
+              <span v-else> {{ $t('Aumont') }}</span>
             </div>
           </flexbox-item>
           <flexbox-item :span="8">
@@ -157,23 +160,24 @@
       <div class="item-row fc3">
         <div>
           <div v-if="model === 0">
-            <button class="button-l" :dis="buttonInfo == ('Buy Now'||'立即购买')&&tokenBalance>=aumout ? '' : '1'" @click="buyBatch()">
+            <button class="button-l" :dis="buttonInfo == ('Buy Now' || '立即购买') && tokenBalance >= aumout ? '' : '1'"
+              @click="buyBatch()">
               {{ buttonInfo }}
             </button>
           </div>
           <div v-else-if="model === 1">
-            <button class="button-l" :dis="ntfBalance >= num? '' : '1'" @click="buyBatch()">
-              <span v-if="ntfBalance < num">{{$t('INB')}}</span>
-              <span v-else-if="outTime">{{$t('po7')}}</span>
-              <span v-else>{{$t('SB')}}</span>
+            <button class="button-l" :dis="ntfBalance >= num && !outTime ? '' : '1'" @click="buyBatch()">
+              <span v-if="ntfBalance < num">{{ $t('INB') }}</span>
+              <span v-else-if="outTime">{{ $t('po7') }}</span>
+              <span v-else>{{ $t('SB') }}</span>
             </button>
           </div>
           <div v-else>
             <button @click="tokeRate()" class="button-l" :dis="ntfBalance >= ntfValue && ntfBalance > 0 ? '' : '1'">
               <span v-if="ntfBalance >= ntfValue && ntfBalance > 0">
-                {{$t('Exchange')}}</span>
+                {{ $t('Exchange') }}</span>
               <span v-else>
-                {{$t('INB')}}
+                {{ $t('INB') }}
               </span>
             </button>
           </div>
@@ -183,10 +187,10 @@
     </div>
     <div class="item-box">
       <div class="item-row">
-        <b>{{$t('description')}}</b>
+        <b>{{ $t('description') }}</b>
       </div>
       <div class="item-row fs14 wap fc3">
-        {{ $i18n.locale=='en'?ido.description:ido.descriptionCN }}
+        {{ $i18n.locale == 'en' ? ido.description : ido.descriptionCN }}
       </div>
       <div class="item-row">
         <span v-if="ido.telegram" @click="websiteHerf(ido.telegram)"><i class="iconfont icon-telegram"></i></span>
@@ -201,30 +205,33 @@
         <div class="line2"></div>
       </div>
       <div class="item-row">
-        <b> {{$t('details')}}</b>
+        <b> {{ $t('details') }}</b>
       </div>
       <div class="item-row info-text fc3 itxst">
-        <div> <span class="fc2">{{$t('pn')}}: </span> {{ $i18n.locale=='en'?ido.title:ido.titleCN }} </div>
-        <div> <span class="fc2">{{$t('developer')}}: </span> {{ $i18n.locale=='en'?ido.developer:ido.developerCN }}</div>
-        <div> <span class="fc2">{{$t('category')}}: </span> {{ $i18n.locale=='en'?ido.category:ido.categoryCN }} </div>
-        <div> <span class="fc2">{{$t('language')}}: </span> {{ ido.language }} </div>
+        <div> <span class="fc2">{{ $t('pn') }}: </span> {{ $i18n.locale == 'en' ? ido.title : ido.titleCN }} </div>
+        <div> <span class="fc2">{{ $t('developer') }}: </span> {{ $i18n.locale == 'en' ? ido.developer : ido.developerCN
+        }}
+        </div>
+        <div> <span class="fc2">{{ $t('category') }}: </span> {{ $i18n.locale == 'en' ? ido.category : ido.categoryCN }}
+        </div>
+        <div> <span class="fc2">{{ $t('language') }}: </span> {{ ido.language }} </div>
         <div> <span class="fc2">Total Supply: </span> {{ totalSupply }}</div>
-        <div> <span class="fc2">{{$t('na')}}: </span>{{ ido.nftAddress.substr(0, 10) }}... <i class="iconfont icon-fuzhi"
-            @click="copy(ido.nftAddress)"></i></div>
-        <div> <span class="fc2">{{$t('cs')}}: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
+        <div> <span class="fc2">{{ $t('na') }}: </span>{{ ido.nftAddress.substr(0, 10) }}... <i
+            class="iconfont icon-fuzhi" @click="copy(ido.nftAddress)"></i></div>
+        <div> <span class="fc2">{{ $t('cs') }}: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
             @click="copy(ido.address)"></i>
         </div>
-        <div> <span class="fc2">{{$t('ts2')}}:</span> {{ ido.paymentAddress.substr(0, 10) }}... <i
+        <div> <span class="fc2">{{ $t('ts2') }}:</span> {{ ido.paymentAddress.substr(0, 10) }}... <i
             class="iconfont icon-fuzhi" @click="copy(ido.paymentAddress)"></i></div>
       </div>
       <div style="padding: 16px 8px;">
         <div class="line2"></div>
       </div>
       <div class="item-row ">
-        <b> {{$t('rules')}}</b>
+        <b> {{ $t('rules') }}</b>
       </div>
       <div class="item-row fs14 wap fc3">
-        {{ $i18n.locale=='en'?ido.rule:ido.ruleCN }}
+        {{ $i18n.locale == 'en' ? ido.rule : ido.ruleCN }}
       </div>
     </div>
   </div>
@@ -290,7 +297,7 @@ export default {
       tokenId: '',
       model: 0,
       bv: 10,
-      outTime : false,
+      outTime: false,
       tokenName: 'Unknow',
       tokenName2: 'Unknow',
       priceName: '',
@@ -312,6 +319,11 @@ export default {
     }
   },
   methods: {
+    deplyLoad(method) {
+      setTimeout(() => {
+        method();
+      }, 100);
+    },
     changeV(value) {
       this.num = Number(this.num);
       if (this.model === 2) {
@@ -330,25 +342,28 @@ export default {
       open(url);
     },
     isApprove() {
-      console.log("授权")
-      let provider = new ethers.providers.Web3Provider(ethereum, 'any');
-      var contract = new ethers.Contract(this.ido.nftAddress, ERC721, provider.getSigner())
+      let provider = new ethers.providers.Web3Provider(ethereum, "any");
+      var contract = new ethers.Contract(this.ido.nftAddress, ERC721, provider.getSigner());
       contract.isApprovedForAll(this.getAccount(), this.ido.address).then(res => {
-        console.log("NTF:" + res);
+        console.log("NTF授权加载结果：" + res);
         this.approves[0] = res;
+        this.deplyLoad(this.getProgress);
       });
     },
     isBuyApprove() {
       var contract = this.getEFC20Priveder();
       contract.allowance(this.getAccount(), this.ido.address).then(data => {
-        if (data >= this.aumout) {
+        console.log("获取TOKEN权限结果成功！")
+        if (data > this.aumout) {
           this.approves[1] = true;
-          console.log("Token YES")
+          console.log("Token YES");
         }
         else {
           this.approves[1] = false;
-          console.log("Token NO")
+          console.log("Token NO");
         }
+        this.deplyLoad(this.getBalance);
+
       });
     },
     successTip(txt) {
@@ -363,7 +378,7 @@ export default {
         this.loadWaitTip();
         res.wait(1).then(v => {
           this.approves[1] = true;
-          this.successTip(this.$t('as'));
+          this.successTip(this.$t('tips.as'));
           this.buyBatch();
         })
 
@@ -376,16 +391,26 @@ export default {
         this.loadWaitTip();
         res.wait(1).then(v => {
           this.approves[0] = true;
-          this.successTip(this.$t('as'));
+          this.successTip(this.$t('tips.as'));
           if (flag) this.tokeRate();
           else this.buyBatch();
         })
 
       });
     },
-    getAccount() {
+    getWaitAccount() {
       if (!ethereum) return null;
-      return ethereum.selectedAddress;
+      else {
+        return new Promise((res, rej) => {
+          ethereum.request({ method: 'eth_requestAccounts' }).then((accounts) => {
+            this.accountAddress = accounts[0];
+            res(accounts[0]);
+          });
+        })
+      }
+    },
+    getAccount() {
+      return this.accountAddress;
     },
     getProjectCurrentPriveder() {
       let provider = new ethers.providers.Web3Provider(ethereum, 'any');
@@ -411,135 +436,116 @@ export default {
     getOutTime() {
       let contract = this.getProjectCurrentPriveder();
       contract.refundDeadline().then(v => {
+        console.log("获取项目超时信息成功！")
         let date = new Date().getTime();
         this.outTime = (v * 1000 - date > 0) ? false : true;
-        console.log(v);
-      })
+        this.getStateInfo()
+        this.deplyLoad(this.isBuyApprove);
+      }).catch(err => {
+        this.error("获取项目超时信息成功！")
+      });
     },
     getWhiteListTimestamp() {
       let date = Math.floor(new Date().getTime() / 1000);
-            let endTime = 0;
-            let contract = this.getProjectCurrentPriveder();
-            //结束的时间
-            contract.endTimestamp().then(res => {
-                endTime = Number(res);
-                console.log("end time:" + new Date(endTime * 1000));
-                if (endTime < date) {
-                    this.whitetingState = this.$t('eso');
-                    this.startSaleTime = this.$t('eso');
-                    this.state = [-1, -1];
-                    this.getStateInfo();
-                }
-                else {
-                    //得到白名单发售的时间
-                    contract.startTimestamp().then(res => {
-                        let startTime = Number(res);
-                        contract.listingTimestamp().then(res => {
-                            //得到公开发售时间
-                            let listingTime = Number(res);
-                            if (date > startTime) {
-                                if (date > listingTime) {
-                                    this.startSaleTime = this.$t('edin') +" " + this.getDateTime(endTime - date);
-                                    this.whitetingState = this.$t('eso');
-                                    this.state[1] = 1;
-                                    this.state[0] = -1;
-                                }
-                                else {
-                                    this.startSaleTime = this.$t('stin') +" " + this.getDateTime(listingTime - date);
-                                    this.whitetingState = this.$t('edin') +" " + this.getDateTime(listingTime - date);
-                                    this.state[1] = 0;
-                                    this.state[0] = 1;
-                                }
-                            }
-                            else {
-                                this.whitetingState = this.$t('stin') +" " + this.getDateTime(startTime - date);
-                                this.startSaleTime = this.$t('stin') +" " + this.getDateTime(listingTime - date);
-                                this.state[0] = 0;
-                                this.state[1] = 0;
-                            }
-                            this.getStateInfo();
-                        });
-                    });
-                }
-            }).catch(err=>{
-                this.error(err);
-            });
+      //结束时间
+      let endTime = Math.floor(new Date(this.ido.endTime).getTime() / 1000);
+      //得到公开发售时间
+      let startTime = Math.floor(new Date(this.ido.startTime).getTime() / 1000);
+      //得到公开发售时间
+      let listingTime = Math.floor(new Date(this.ido.listingTime).getTime() / 1000);
+      if (endTime < date) {
+        this.whitetingState = this.$t('eso');
+        this.startSaleTime = this.$t('eso');
+        this.state = [-1, -1];
+      }
+      else {
+        if (date > startTime) {
+          if (date > listingTime) {
+            this.startSaleTime = this.$t('edin') + " " + this.getDateTime(endTime - date);
+            this.whitetingState = this.$t('eso');
+            this.state[1] = 1;
+            this.state[0] = -1;
+          }
+          else {
+            this.startSaleTime = this.$t('stin') + " " + this.getDateTime(listingTime - date);
+            this.whitetingState = this.$t('edin') + " " + this.getDateTime(listingTime - date);
+            this.state[1] = 0;
+            this.state[0] = 1;
+          }
+        }
+        else {
+          this.whitetingState = this.$t('stin') + " " + this.getDateTime(startTime - date);
+          this.startSaleTime = this.$t('stin') + " " + this.getDateTime(listingTime - date);
+          this.state[0] = 0;
+          this.state[1] = 0;
+        }
+      }
     },
     getStateInfo() {
       if (this.progress == 100 || this.totalNumber === this.buyNumber) {
-                this.stateInfo = this.$t('So');
-                this.buttonInfo = this.$t('So');
-            }
-            else if (this.state[0] === -1 && this.state[1] === -1) {
-                this.stateInfo = this.$t('So');
-                this.buttonInfo = this.$t('So');
-            }
-            else if (this.state[0] === 0 && this.state[1] === 0) {
-                this.stateInfo = this.$t('nos');
-                this.buttonInfo = this.$t('nos');
-            }
-            else if (this.state[0] === 1 && this.isInWhitelist) {
-                this.stateInfo = this.$t('wlu');
-                this.buttonInfo = this.$t('buynow')
-            }
-            else if (this.state[0] === 1 && !this.isInWhitelist && this.state[1] === 0) {
-                this.stateInfo = this.$t('wnlu') +" " + this.startSaleTime;
-                this.buttonInfo = this.$t('owa');
-            }
-            else if (this.state[1] === 1) {
-                this.stateInfo =  this.$t('psa')+" " + this.startSaleTime;
-                this.buttonInfo =  this.$t('buynow');
-            }
-            else {
-                this.stateInfo = "Unkown Error";
-                this.buttonInfo = "Not Buy";
-            }
+        this.stateInfo = this.$t('So');
+        this.buttonInfo = this.$t('So');
+      }
+      else if (this.state[0] === -1 && this.state[1] === -1) {
+        this.stateInfo = this.$t('So');
+        this.buttonInfo = this.$t('So');
+      }
+      else if (this.state[0] === 0 && this.state[1] === 0) {
+        this.stateInfo = this.$t('nos');
+        this.buttonInfo = this.$t('nos');
+      }
+      else if (this.state[0] === 1 && this.isInWhitelist) {
+        this.stateInfo = this.$t('wlu');
+        this.buttonInfo = this.$t('buynow')
+      }
+      else if (this.state[0] === 1 && !this.isInWhitelist && this.state[1] === 0) {
+        this.stateInfo = this.$t('wnlu') + " " + this.startSaleTime;
+        this.buttonInfo = this.$t('owa');
+      }
+      else if (this.state[1] === 1) {
+        this.stateInfo = this.$t('psa') + " " + this.startSaleTime;
+        this.buttonInfo = this.$t('buynow');
+      }
+      else {
+        this.stateInfo = "Unkown Error";
+        this.buttonInfo = "Not Buy";
+      }
     },
     getProgress() {
       let contract = this.getProjectCurrentPriveder();
       contract.progress().then((res) => {
+        console.log("获取售进度成功！")
+        this.deplyLoad(this.userIsInWhitelist);
         this.buyNumber = res[0];
         this.totalNumber = res[1];
         this.progress = Math.floor((res[0] / res[1] * 100));
-      })
+      }).catch(err => {
+        this.error('获取售进度失败!');
+      });
     },
     userIsInWhitelist() {
       let contract = this.getProjectCurrentPriveder();
       contract.isInWhitelist(this.getAccount()).then((res) => {
+        console.log("获取白名单信息成功！");
         this.isInWhitelist = res;
-      })
+        this.deplyLoad(this.getOutTime)
+      });
     },
     getNftPrice() {
-      let contract = this.getProjectCurrentPriveder();
-      contract.nftPrice().then((res) => {
-        this.price = ethers.utils.formatEther(res);
-        this.changeNum();
-        this.isBuyApprove();
-      })
+      this.price = this.ido.nftPrice;
     },
     getPayment() {
-      let contract = this.getEFC20Priveder();
-      contract.symbol().then(res => {
-        this.tokenName = res;
-        this.tokenId = this.getTokenAddress(res);
-        this.getBalance();
-      })
+      this.tokenName = this.ido.paymentSymbol;
+      this.tokenId = this.ido.paymentAddress;
     },
 
     getTokenName() {
-      let contract = this.getExchangePriveder();
-      contract.symbol().then(res => {
-        this.tokenName2 = res;
-      })
+      this.tokenName2 = this.ido.exchangeSymbol;
     },
     //汇率比
     exchange() {
-      let contract = this.getProjectCurrentPriveder();
-      contract.tokeRate().then((res) => {
-        let bv = ethers.utils.formatUnits(res);
-        this.bv = bv;
-        this.tokenValue = this.tokenValue * bv;
-      })
+      this.bv = this.ido.exchangeRate;
+      this.tokenValue = this.tokenValue * this.bv;
     },
     toIDOItem() {
       this.$router.push('/IdoItem');
@@ -548,15 +554,22 @@ export default {
       let contract = this.getNFTPriveder();
       contract.balanceOf(this.getAccount()).then((res) => {
         this.ntfBalance = Number(res);
+        console.log("获取NFT余额成功！")
         if (this.ntfValue > this.ntfBalance) {
           this.ntfValue = this.ntfBalance;
         }
-      })
+      }).catch(err => {
+        this.error('获取NFT数量失败!');
+      });
     },
     getBalance(address) {
-      let provider = new ethers.providers.Web3Provider(ethereum, 'any');
+      let provider = new ethers.providers.Web3Provider(ethereum, "any");
       getBalance(address ? address : this.tokenId, provider, this.getAccount()).then(res => {
+        console.log("获取余额成功！")
         this.tokenBalance = Number(ethers.utils.formatEther(res)).toFixed(5);
+        this.deplyLoad(this.getNTFBalance);
+      }).catch(err => {
+        this.error('获取余额失败!');
       });
     },
     canBuy() {
@@ -617,7 +630,6 @@ export default {
         })
       }
       else if (this.model === 0) {
-        console.log(this.num);
         if (!this.canBuy()) return;
         let contract = this.getProjectCurrentPriveder();
         contract.buyBatch(this.num).then((res) => {
@@ -667,16 +679,10 @@ export default {
       }
     },
     geTrefundFeeRate() {
-      let contract = this.getProjectCurrentPriveder();
-      contract.refundFeeRate().then((res) => {
-        this.refundRate = res / 10000;
-      });
+      this.refundRate = this.ido.refundFeeRate / 10000;
     },
     getTotalSupply() {
-      let contract = this.getNFTPriveder();
-      contract.totalSupply().then(res => {
-        this.totalSupply = res;
-      })
+      this.totalSupply = this.ido.nftTotalSupply;
     },
     ntfChange() {
       /*if (this.ntfValue > this.ntfBalance) {
@@ -690,13 +696,9 @@ export default {
     },
     changeNum() {
       this.aumout = this.num * this.price;
-      if(this.tokenBalance<this.aumout && this.aumout>0){
-        this.buttonInfo = this.$t('ITB',{type:this.tokenName});
+      if (this.tokenBalance < this.aumout && this.aumout > 0) {
+        this.buttonInfo = this.$t('ITB', { type: this.tokenName });
       }
-      else{
-        this.getStateInfo();
-      }
-      this.isBuyApprove();
     },
     error(err) {
       console.log(err);
@@ -741,18 +743,7 @@ export default {
       this.$vux.toast.text(txt, 'top');
     },
     refreash() {
-      this.isApprove();
-      this.getWhiteListTimestamp();
-      this.getProgress();
-      this.userIsInWhitelist();
-      this.getNftPrice();
-      this.getPayment();
-      this.exchange();
-      this.getTokenName();
-      this.getNTFBalance();
-      this.geTrefundFeeRate();
-      this.getTotalSupply();
-      this.getOutTime();
+
     }
   },
   mounted() {
@@ -765,20 +756,33 @@ export default {
         pid: pid
       }
     }).then(({ data }) => {
-      //console.log(data.data);
       this.ido = data.data;
-      if (!this.getAccount()) {
-        //this.$message("you should connect wallet!");
-        this.toast(this.$t('tips.yscw'));
+      console.log(this.ido)
+      let res = this.getWaitAccount();
+      if (!res) {
+        this.$message(this.$t('tips.cw'));
       }
       else {
-        this.refreash();
+        res.then(a => {
+          setTimeout(() => {
+            this.getWhiteListTimestamp();
+            this.getNftPrice();
+            this.getPayment();
+            this.exchange();
+            this.geTrefundFeeRate();
+            this.getTotalSupply();
+            this.getTokenName();
+            this.getStateInfo();
+            this.changeNum();
+            //延时加载
+            this.isApprove();
+          }, 200);
+        })
       }
       this.$vux.loading.hide();
     }).catch(err => {
       console.log(err);
-      //this.$message.error("Network error!");
-       this.toast(err);
+      this.toast(err);
       this.$vux.loading.hide();
     })
   },

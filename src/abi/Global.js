@@ -1,5 +1,5 @@
 const Global = {
-    RequestApi : '/api',//打包替换为'',否则为'/api'
+    RequestApi : '',//打包替换为'',否则为'/api'
 }
 
 
