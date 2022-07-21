@@ -215,7 +215,7 @@
         <div> <span class="fc2">{{ $t('category') }}: </span> {{ $i18n.locale == 'en' ? ido.category : ido.categoryCN }}
         </div>
         <div> <span class="fc2">{{ $t('language') }}: </span> {{ ido.language }} </div>
-        <div> <span class="fc2">Total Supply: </span> {{ totalSupply }}</div>
+        <div> <span class="fc2">Total Supply: </span> {{ totalSupply }} {{ido.exchangeSymbol}}</div>
         <div> <span class="fc2">{{ $t('na') }}: </span>{{ ido.nftAddress.substr(0, 10) }}... <i
             class="iconfont icon-fuzhi" @click="copy(ido.nftAddress)"></i></div>
         <div> <span class="fc2">{{ $t('cs') }}: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
@@ -274,7 +274,7 @@ export default {
         exchangeAddress: "0x78867bbeef44f2326bf8ddd1941a4439382ef2a7",
         facebook: "https://facebook.com",
         img: null,
-        imgData: "https://airnfts.s3.amazonaws.com/nft-images/20220313/Lazy_Anteater_15_1647179098137.png",
+        imgData: "",
         language: "English",
         listingTime: "2022-07-06 16:15:52",
         medium: null,
@@ -288,6 +288,7 @@ export default {
         title: "Lazy Anteater",
         twitter: null,
         website: null,
+        exchangeSymbol : ''
       },
       stateInfo: 'State Info',
       buttonInfo: 'Buy',
@@ -313,6 +314,9 @@ export default {
       whitetingState: 'Start in 0d 00:00:00',
       startSaleTime: 'Start in 0d 00:00:00',
       tokenBalance: 0,
+      whilteBuyNumber: 0,
+      whilteCanBuyNumber: 0,
+      maxSellNumber: 999,
       state: [0, 0],//0:未开始,1:正在开始，-1:结束,
       stateInfo: 'NO INFO',
       approves: [false, false]//NTF 与 Token的授权
@@ -333,8 +337,14 @@ export default {
         this.ntfChange();
       }
       else {
-        this.num += value;
-        this.num = (this.num > 0 ? this.num : 0);
+        if (this.num+value > this.maxSellNumber){
+
+        }
+        else {
+          this.num += value;
+          this.num = (this.num > 0 ? this.num : 0);
+        }
+
         this.changeNum();
       }
     },
@@ -514,13 +524,24 @@ export default {
     getProgress() {
       let contract = this.getProjectCurrentPriveder();
       contract.progress().then((res) => {
-        console.log("获取售进度成功！")
+        console.log("获取售卖进度成功")
         this.deplyLoad(this.userIsInWhitelist);
         this.buyNumber = res[0];
         this.totalNumber = res[1];
+        this.whilteBuyNumber = res[2];
+        this.whilteCanBuyNumber = res[3];
         this.progress = Math.floor((res[0] / res[1] * 100));
       }).catch(err => {
-        this.error('获取售进度失败!');
+        this.error('获取售卖进度失败!');
+      });
+    },
+    getCanSellMaxNumber() {
+      let contract = this.getProjectCurrentPriveder();
+      contract.canBuy().then((res) => {
+        console.log("获取最大售卖数" + res)
+        this.maxSellNumber = res;
+      }).catch(err => {
+        this.error('获取最大售卖数失败!');
       });
     },
     userIsInWhitelist() {
@@ -555,6 +576,7 @@ export default {
       contract.balanceOf(this.getAccount()).then((res) => {
         this.ntfBalance = Number(res);
         console.log("获取NFT余额成功！")
+        this.deplyLoad(this.getCanSellMaxNumber);
         if (this.ntfValue > this.ntfBalance) {
           this.ntfValue = this.ntfBalance;
         }
@@ -579,6 +601,10 @@ export default {
         return false;
       }
       if (this.state[0] == 1 && this.isInWhitelist) {
+        if (this.whilteCanBuyNumber <= this.whilteBuyNumber) {
+          this.$message(this.$t('eso'));
+          return false;
+        }
         if (!this.approves[1]) {
           this.toast(this.$t('tips.yna'));
           this.approve();

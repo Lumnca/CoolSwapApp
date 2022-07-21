@@ -135,19 +135,6 @@ var Project = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            }
-        ],
-        "name": "buy",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "num",
                 "type": "uint256"
             }
@@ -155,6 +142,19 @@ var Project = [
         "name": "buyBatch",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "canBuy",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -291,6 +291,11 @@ var Project = [
             {
                 "internalType": "uint256",
                 "name": "_total",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_whiteNum",
                 "type": "uint256"
             },
             {
@@ -459,6 +464,19 @@ var Project = [
     },
     {
         "inputs": [],
+        "name": "publicBuyLimit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "receiver",
         "outputs": [
             {
@@ -543,6 +561,107 @@ var Project = [
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_limit",
+                "type": "uint256"
+            }
+        ],
+        "name": "setBuyLimit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_price",
+                "type": "uint256"
+            }
+        ],
+        "name": "setPrice",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_receiver",
+                "type": "address"
+            }
+        ],
+        "name": "setReceiver",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_refundFeeRate",
+                "type": "uint256"
+            }
+        ],
+        "name": "setRefundFeeRate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_start",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_listing",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_end",
+                "type": "uint256"
+            }
+        ],
+        "name": "setTime",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_rate",
+                "type": "uint256"
+            }
+        ],
+        "name": "setTokenRate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_limit",
+                "type": "uint256"
+            }
+        ],
+        "name": "setWhitelistSoldLimit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "startTimestamp",
         "outputs": [
@@ -605,6 +724,11 @@ var Project = [
                 "internalType": "address[]",
                 "name": "removeList",
                 "type": "address[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "buyLimit",
+                "type": "uint256"
             }
         ],
         "name": "updateWhitelist",
@@ -626,7 +750,6 @@ var Project = [
         "type": "function"
     }
 ]
-
 
 
 export { Project };

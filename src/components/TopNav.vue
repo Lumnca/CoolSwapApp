@@ -102,13 +102,12 @@ export default {
             this.$router.push('/home');
         },
         toConnectWallet() {
-            if (this.accountAddress && !this.logoutFlag) {
+            if (this.account) {
                 this.showToast = true;
                 return;
             }
             if (ethereum) {
-                if (this.logoutFlag) {
-                    this.logoutFlag = false;
+                if (this.accountAddress) {
                     this.tipMessage(this.$t('tips.cws'))
                     this.setAccount(this.accountAddress);
                 }
@@ -194,8 +193,7 @@ export default {
             });
         },
         logout() {
-            this.showToast = false;
-            this.logoutFlag = true;
+            this.showToast = false; 
             this.tipMessage(this.$t('tips.nc'),true);
             this.clearAccount();
         }
@@ -230,7 +228,12 @@ export default {
                 this.clearAccount();
             })
             ethereum.on('connect', () => {
-                console.log('获取连接...');
+                let id = sessionStorage.getItem('_account');
+                console.log('获取连接'+id);
+                if(id){
+                     this.setAccount(id);
+                    return;
+                }
                 var res = this.getAccount();
                 if (res) {
                     res.then(account => {
