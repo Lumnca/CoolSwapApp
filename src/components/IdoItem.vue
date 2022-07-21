@@ -2,7 +2,7 @@
   <div>
     <div class="item-box">
       <div>
-        <div class="item-row">
+        <div class="item-row" style="margin: auto;">
           <img :src="ido.imgData" height="243" width="100%" class="img-m" />
         </div>
         <div class="item-row">
@@ -12,7 +12,10 @@
             </flexbox-item>
             <flexbox-item :span="10">
               <div class="tr fc3">
-                <span class="tag-block fs16">{{ stateInfo }} </span>
+                <span class="tag-block fs16" v-if="state[0]==1&&state[1]!=1">{{ whitetingState }} </span>
+                <span class="tag-block fs16" v-else-if="state[0]!=1&&state[1]==1">{{startSaleTime }} </span>
+                <span class="tag-block fs16" v-else-if="state[0]==0&&state[1]==0">{{$t('nos')}} </span>
+                <span class="tag-block fs16" v-else>{{$t('eso')}} </span>
               </div>
             </flexbox-item>
           </flexbox>
@@ -86,7 +89,7 @@
         <div class="item-row">
           <flexbox>
             <flexbox-item :span="4">
-              <div class="tl fc fs14">NTF<br /><span class="fs10"> {{ $t('balance') }}: {{ ntfBalance }}</span> </div>
+              <div class="tl fc fs14">NFT<br /><span class="fs10"> {{ $t('balance') }}: {{ ntfBalance }}</span> </div>
             </flexbox-item>
             <flexbox-item :span="8">
               <div class="tr">
@@ -141,7 +144,7 @@
           <flexbox-item :span="4">
             <div class="tl">
               <span v-if="model == 1"> {{ $t('Receive') }} </span>
-              <span v-else-if="model == 2">Token</span>
+              <span v-else-if="model == 2">{{ido.exchangeSymbol}}</span>
               <span v-else> {{ $t('Aumont') }}</span>
             </div>
           </flexbox-item>
@@ -337,8 +340,8 @@ export default {
     changeV(value) {
       this.num = Number(this.num);
       if (this.model === 2) {
-        if (!this.ntfValue || this.ntfValue>=this.ntfBalance) this.ntfValue = 0;
-      
+        if (!this.ntfValue || this.ntfValue >= this.ntfBalance) this.ntfValue = 0;
+
         this.ntfValue += value;
         this.ntfValue = Math.floor(this.ntfValue > 0 ? this.ntfValue : 0);
         this.ntfChange();
@@ -349,7 +352,7 @@ export default {
             this.num += value;
             this.num = (this.num > 0 ? this.num : 0);
           }
-          else{
+          else {
             this.num = 0;
           }
         }
@@ -358,7 +361,7 @@ export default {
             this.num += value;
             this.num = (this.num > 0 ? this.num : 0);
           }
-          else{
+          else {
             this.num = 0;
           }
         }
@@ -629,6 +632,10 @@ export default {
       //检查数量
       if (this.num == '' || this.num == 0) {
         this.toast('please input buy count!');
+        return false;
+      }
+      else if (this.buyNumber>=this.totalNumber||this.progress==100) {
+        this.toast(this.$t('So'));
         return false;
       }
       else if (this.maxSellNumber === 0) {
