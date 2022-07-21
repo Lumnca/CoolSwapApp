@@ -74,6 +74,9 @@ export default {
     bnun : 'Buy new unique NFTs',
     cac  : 'Coolswap activities',
     ITB : 'Insufficient {type} Balance',
+    Locked : ' Locked',
+    rsl : 'reach sale limit',
+    rwsl : 'reach whitelist sale limit',
     tips: {
         'cws': 'connect wallet success!',
         'yna': 'you need approve!',

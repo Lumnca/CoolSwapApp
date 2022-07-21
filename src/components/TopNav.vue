@@ -114,7 +114,7 @@ export default {
                 ethereum.request({ method: 'eth_requestAccounts' });
             }
             else {
-                this.tipMessage('Server Error', true);
+                this.tipMessage('NetWork Error', true);
             }
         },
         getAccount() {
@@ -199,6 +199,16 @@ export default {
         }
     },
     mounted() {
+        this.timer = setInterval(()=>{
+            if(!this.account){
+                this.setAccount(this.accountAddress||sessionStorage.getItem('_account')||ethereum.selectedAddress);
+                console.log("获取id成功！")
+            }
+            else{
+                console.log('清除')
+                clearInterval(this.timer);
+            }
+        },1500);
         //语言检测
         this.$i18n.locale = localStorage.getItem('_en') || 'en';
         //插件检测

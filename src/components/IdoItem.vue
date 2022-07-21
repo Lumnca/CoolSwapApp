@@ -166,15 +166,19 @@
             </button>
           </div>
           <div v-else-if="model === 1">
-            <button class="button-l" :dis="ntfBalance >= num && !outTime ? '' : '1'" @click="buyBatch()">
-              <span v-if="ntfBalance < num">{{ $t('INB') }}</span>
+            <button class="button-l" :dis="ntfBalance >= num && !outTime && releaseState ? '' : '1'"
+              @click="buyBatch()">
+              <span v-if="!releaseState">{{ $t('Locked') }}</span>
+              <span v-else-if="ntfBalance < num">{{ $t('INB') }}</span>
               <span v-else-if="outTime">{{ $t('po7') }}</span>
               <span v-else>{{ $t('SB') }}</span>
             </button>
           </div>
           <div v-else>
-            <button @click="tokeRate()" class="button-l" :dis="ntfBalance >= ntfValue && ntfBalance > 0 ? '' : '1'">
-              <span v-if="ntfBalance >= ntfValue && ntfBalance > 0">
+            <button @click="tokeRate()" class="button-l"
+              :dis="ntfBalance >= ntfValue && ntfBalance > 0 && releaseState ? '' : '1'">
+              <span v-if="!releaseState">{{ $t('Locked') }}</span>
+              <span v-else-if="ntfBalance >= ntfValue && ntfBalance > 0">
                 {{ $t('Exchange') }}</span>
               <span v-else>
                 {{ $t('INB') }}
@@ -215,7 +219,7 @@
         <div> <span class="fc2">{{ $t('category') }}: </span> {{ $i18n.locale == 'en' ? ido.category : ido.categoryCN }}
         </div>
         <div> <span class="fc2">{{ $t('language') }}: </span> {{ ido.language }} </div>
-        <div> <span class="fc2">Total Supply: </span> {{ totalSupply }} {{ido.exchangeSymbol}}</div>
+        <div> <span class="fc2">Total Supply: </span> {{ totalSupply }} {{ ido.exchangeSymbol }}</div>
         <div> <span class="fc2">{{ $t('na') }}: </span>{{ ido.nftAddress.substr(0, 10) }}... <i
             class="iconfont icon-fuzhi" @click="copy(ido.nftAddress)"></i></div>
         <div> <span class="fc2">{{ $t('cs') }}: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
@@ -288,7 +292,8 @@ export default {
         title: "Lazy Anteater",
         twitter: null,
         website: null,
-        exchangeSymbol : ''
+        exchangeSymbol: '',
+        releaseTime: null
       },
       stateInfo: 'State Info',
       buttonInfo: 'Buy',
@@ -319,6 +324,7 @@ export default {
       maxSellNumber: 999,
       state: [0, 0],//0:未开始,1:正在开始，-1:结束,
       stateInfo: 'NO INFO',
+      releaseState: true,
       approves: [false, false]//NTF 与 Token的授权
     }
   },
@@ -331,20 +337,31 @@ export default {
     changeV(value) {
       this.num = Number(this.num);
       if (this.model === 2) {
-        if (!this.ntfValue) this.ntfValue = 0;
+        if (!this.ntfValue || this.ntfValue>=this.ntfBalance) this.ntfValue = 0;
+      
         this.ntfValue += value;
         this.ntfValue = Math.floor(this.ntfValue > 0 ? this.ntfValue : 0);
         this.ntfChange();
       }
       else {
-        if (this.num+value > this.maxSellNumber){
-
+        if (this.model === 0) {
+          if (this.num < this.maxSellNumber) {
+            this.num += value;
+            this.num = (this.num > 0 ? this.num : 0);
+          }
+          else{
+            this.num = 0;
+          }
         }
         else {
-          this.num += value;
-          this.num = (this.num > 0 ? this.num : 0);
+          if (this.num < this.ntfBalance) {
+            this.num += value;
+            this.num = (this.num > 0 ? this.num : 0);
+          }
+          else{
+            this.num = 0;
+          }
         }
-
         this.changeNum();
       }
     },
@@ -429,7 +446,6 @@ export default {
     },
     getEFC20Priveder() {
       let provider = new ethers.providers.Web3Provider(ethereum, 'any');
-
       let contract = new ethers.Contract(this.ido.paymentAddress, ERC20, provider.getSigner());
       return contract;
     },
@@ -449,7 +465,6 @@ export default {
         console.log("获取项目超时信息成功！")
         let date = new Date().getTime();
         this.outTime = (v * 1000 - date > 0) ? false : true;
-        this.getStateInfo()
         this.deplyLoad(this.isBuyApprove);
       }).catch(err => {
         this.error("获取项目超时信息成功！")
@@ -504,9 +519,19 @@ export default {
         this.stateInfo = this.$t('nos');
         this.buttonInfo = this.$t('nos');
       }
+      else if (this.maxSellNumber == 0) {
+        this.stateInfo = this.$t('rsl');
+        this.buttonInfo = this.$t('rsl');
+      }
       else if (this.state[0] === 1 && this.isInWhitelist) {
-        this.stateInfo = this.$t('wlu');
-        this.buttonInfo = this.$t('buynow')
+        if (this.whilteCanBuyNumber <= this.whilteBuyNumber) {
+          this.stateInfo = this.$t('rwsl');
+          this.buttonInfo = this.$t('rwsl');
+        }
+        else {
+          this.stateInfo = this.$t('wlu');
+          this.buttonInfo = this.$t('buynow')
+        }
       }
       else if (this.state[0] === 1 && !this.isInWhitelist && this.state[1] === 0) {
         this.stateInfo = this.$t('wnlu') + " " + this.startSaleTime;
@@ -519,6 +544,11 @@ export default {
       else {
         this.stateInfo = "Unkown Error";
         this.buttonInfo = "Not Buy";
+      }
+      this.releaseState = this.ido.releaseTime || false;
+
+      if (this.ido.releaseTime) {
+        this.releaseState = (new Date(this.ido.releaseTime).getTime() < new Date().getTime());
       }
     },
     getProgress() {
@@ -540,6 +570,7 @@ export default {
       contract.canBuy().then((res) => {
         console.log("获取最大售卖数" + res)
         this.maxSellNumber = res;
+        this.getStateInfo();
       }).catch(err => {
         this.error('获取最大售卖数失败!');
       });
@@ -600,9 +631,13 @@ export default {
         this.toast('please input buy count!');
         return false;
       }
-      if (this.state[0] == 1 && this.isInWhitelist) {
+      else if (this.maxSellNumber === 0) {
+        this.toast(this.$t('rsl'));
+        return false;
+      }
+      else if (this.state[0] == 1 && this.isInWhitelist) {
         if (this.whilteCanBuyNumber <= this.whilteBuyNumber) {
-          this.$message(this.$t('eso'));
+          this.toast(this.$t('rwsl'));
           return false;
         }
         if (!this.approves[1]) {
@@ -621,13 +656,16 @@ export default {
         return true;
       }
       else {
-        //this.$message.error("You can't buy it now!");
+        //this.toast.error("You can't buy it now!");
         return false;
       }
     },
     canSell() {
-      if (this.ntfBalance < this.num || !this.num) {
-        //this.$message.error("You don't have enough NTF");
+      if (!this.releaseState) {
+        return false;
+      }
+      else if (this.ntfBalance < this.num || !this.num) {
+        //this.toast.error("You don't have enough NTF");
         this.toast('You dont have enough NTF');
         return false;
       }
@@ -663,7 +701,7 @@ export default {
           res.wait(1).then(v => {
             this.openWebsite(res.hash);
             this.ntfBalance += this.num;
-            this.getBalance();
+            this.getProgress();
           })
         }).catch(err => {
           this.error(err);
@@ -683,8 +721,11 @@ export default {
     },
     tokeRate() {
       if (this.ntfBalance <= 0 || this.ntfValue <= 0 || this.ntfValue > this.ntfBalance) {
-        //this.$message.error("You don't have enough NTF!")
+        //this.toast.error("You don't have enough NTF!")
         return;
+      }
+      if (!this.releaseState) {
+        return
       }
       if (this.approves[0]) {
 
@@ -694,7 +735,7 @@ export default {
           res.wait(1).then(() => {
             this.openWebsite(res.hash);
             this.ntfBalance -= this.ntfValue;
-            this.getBalance();
+            this.getProgress();
           });
         }).catch(err => {
           this.error(err);
@@ -786,7 +827,7 @@ export default {
       console.log(this.ido)
       let res = this.getWaitAccount();
       if (!res) {
-        this.$message(this.$t('tips.cw'));
+        this.toast(this.$t('tips.cw'));
       }
       else {
         res.then(a => {
@@ -798,7 +839,6 @@ export default {
             this.geTrefundFeeRate();
             this.getTotalSupply();
             this.getTokenName();
-            this.getStateInfo();
             this.changeNum();
             //延时加载
             this.isApprove();

@@ -76,6 +76,9 @@ export default {
     bnun : '购买新的NFT',
     cac  : 'Coolswap近期动态',
     ITB : '{type}余额不足',
+    Locked : '等待开盘',
+    rsl : '已达到购买上限',
+    rwsl : '已达白名单购买上限',
     tips: {
         cws: '连接钱包成功！',
         yna: '你需要授权才能进行操作！',
