@@ -38,8 +38,8 @@
       <div class="top-but" style="padding: 8px;font-size: 20px;">
         <button-tab v-model="model">
           <button-tab-item><b>{{ $t('buy') }}</b></button-tab-item>
-          <button-tab-item><b>{{ $t('sell') }}</b></button-tab-item>
-          <button-tab-item><b>{{ $t('Exchange') }}</b></button-tab-item>
+          <button-tab-item><b>{{ $t('ret') }}</b></button-tab-item>
+          <button-tab-item><b>{{ $t('sph') }}</b></button-tab-item>
         </button-tab>
       </div>
       <!--BUY-->
@@ -228,8 +228,8 @@
         <div> <span class="fc2">{{ $t('cs') }}: </span> {{ ido.address.substr(0, 10) }}...<i class="iconfont icon-fuzhi"
             @click="copy(ido.address)"></i>
         </div>
-        <div> <span class="fc2">{{ $t('ts2') }}:</span> {{ ido.paymentAddress.substr(0, 10) }}... <i
-            class="iconfont icon-fuzhi" @click="copy(ido.paymentAddress)"></i></div>
+        <div> <span class="fc2">{{ $t('ts2') }}:</span> {{ ido.exchangeAddress.substr(0, 10) }}... <i
+            class="iconfont icon-fuzhi" @click="copy(ido.exchangeAddress)"></i></div>
       </div>
       <div style="padding: 16px 8px;">
         <div class="line2"></div>

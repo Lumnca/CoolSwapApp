@@ -77,6 +77,8 @@ export default {
     Locked : ' Locked',
     rsl : 'reach sale limit',
     rwsl : 'reach whitelist sale limit',
+    sph : 'Exchange',
+    ret : 'sell',
     tips: {
         'cws': 'connect wallet success!',
         'yna': 'you need approve!',
